@@ -1,0 +1,88 @@
+* {
+  font-family: source-sans-pro, -apple-system, BlinkMacSystemFont, Segoe UI,
+    Roboto, Helvetica Neue, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji,
+    Segoe UI Symbol;
+  padding: 3px;
+  margin: 0;
+  margin-top: 10px;
+  box-sizing: border-box;
+}
+
+header {
+  margin: 0 auto;
+  height: 60px;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  padding: 0 40px;
+}
+Enter a:hover {
+  text-decoration: underline;
+}
+
+nav {
+  position: fixed;
+  right: 0;
+  width: 240px;
+  height: 100vh;
+  padding: 40px;
+}
+
+nav a {
+  color: black;
+  font-size: 18px;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+h2 a,
+h3 a,
+h4 a {
+  color: black;
+  text-decoration: none;
+}
+
+li {
+  list-style: none;
+}
+
+main {
+  margin-left: 40px;
+  width: 80%;
+}
+
+aside {
+  padding: 40px;
+  background-color: #a1ebeb;
+  text-align: center;
+}
+
+aside p {
+  font-weight: bold;
+  text-align: center;
+}
+
+footer p {
+  font-weight: bold;
+  text-align: center;
+  margin: 20px 0;
+}
+
+address {
+  font-size: 12px;
+}
+
+button {
+  border: 1px solid black;
+  background-color: transparent;
+  border-radius: 4px;
+  line-height: 32px;
+  text-align: center;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 12px;
+}
+
+button:hover {
+  background-color: #95d7d7;
+}

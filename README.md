@@ -1,12 +1,12 @@
-# Introduction to HTML
+# Accessibility fundamentals and HTML semantic
 
-## Create an HTML page with your CV(Resume)
+## Change old-fashioned layout to create fancy landing and meet best practice of accessibility approach
 
 ## Before we start
 
 1.	This practical task is verified automatically with tests.
-2.	Please put all your `HTML` code in the `src/index.html` file. If you use any other file, we will not be able to verify it.
-
+2.	Please put all your `HTML` code in the `src/index.html` and `src/gallery.html` file. If you use any other file, we will not be able to verify it.
+3. Please, don't change the page structure, it may affect tests.
 
 ## Development
 
@@ -18,27 +18,32 @@ To be sure you submit a correct solution, you can verify it locally. This requir
 
 ## Task Requirements
 
-Create a simple HTML page with basic information about yourself (aka a `CV` or `resume`).
+Replace non-semantic elements with proper semantic tags to make your web page more sophisticated. 
 
-A `CV` (curriculum vitae) or `resume` is a short, written summary of a person's career, qualifications, and education. In the description, we will use the term CV for simplicity. You can find more details here:  [Curriculum vitae Wikipedia](https://en.wikipedia.org/wiki/Curriculum_vitae).
+Please note you should edit the `src/index.html` file. Your solution cannot be verified if you use a different file. 
 
-In this task, you are to create a web version of your CV—in other words, a simple HTML page about you and your skills. However, it must be structured according to the requirements below.
 
-### This page must have:
-1.	HTML5 `Doctype`
-2.	A root `HTML` tag with a language attribute with `"en-US"` value and `dir` attribute with `ltr` value.
-3.	A `head` tag with:
-    - A `title` tag with the text `"Web CV - YOUR FULL NAME"`. For example: `"Web CV - John Doe"`
-    - A `meta` tag with `UTF-8` encoding
-    - A `link` tag for adding a `favicon` of the type `"image/x-icon"` and href `"images/favicon.ico"`.
-4.	A `body` tag with all the required content
-    - A comment at the top with the text `"This page is created for the 'Introduction to HTML' training course."`
-    - A `header` tag with: 
-        A `level 1 heading` with the text `"Web CV - YOUR FULL NAME"` (The text in `h1` should be the same as in the `title` tag in the `head`.)
-        An `aside` tag with a `level 2 heading` with the text `"Phone number"` and a `paragraph` tag after the heading with phone number in it (You can use your real number or any other number, but it must have at least five numbers to pass the test.)
-    - A `main` tag with the main part of your CV containing three `section` tags with l`evel 2 headings` inside *(**Please note that the order of these sections is important**. It will be checked in the tests.) 
-        - A summary `section` with the text "Summary" in the heading and two paragraphs with the appropriate `paragraph` tag about you in general (Each `paragraph` should have at least 10 characters, including spaces. However, spaces at the beginning and the end do not count.)
-        - An education `section` with the text "Education" in the heading and two paragraphs with the appropriate `paragraph` tag about your education (Each `paragraph` should have at least 10 characters, including spaces.)
-        - A work experience `section` with the text "Work Experience" in the heading and one `paragraph` with the appropriate `paragrap`h tag about your work experience (If you don't have any work experience, please use the text "None" for the content of this paragraph.)
-    - A `footer` tag with a paragraph inside it with the text `"© My Copyright"`
+### Please, make next changes on this page:
 
+1. **Replace the non-semantic tags with semantic tags. You may remove the id from each updated element after you finish, but you should leave all the other attributes (if there are any) as they are**
+    - Replace `<div id="header">` with the proper semantic element. Don't remove the additional class from the element
+    - Replace `<div id="menu">` with the proper semantic element. Don't remove the additional class from the element
+    - Replace `<div id="main">` with the proper semantic element
+    - Replace all instance of `<div class="section">` with the proper semantic elements
+    - Replace `<div class="article">` with the proper semantic element
+    - Replace `<div id="footer">` with the proper semantic element
+    - Replace the sidebar (`<div id="sidebar">`) with the proper semantic element
+2. **Add an image to `<div id="page_layouts>`"**
+    - Use the `<figure>` element to encapsulate the image
+    - The image source should be `./images/code-example.PNG`
+    - Add an alt attribute with the image description `Modern website structure example`
+    - Add an image description with the `<figcaption>` tag. Image description should be `Modern website structure example`
+    - The image should be placed under the comment line in `<div id="page_layouts>`
+3. **Fix the headings on the page:**
+    - There should be only one `<h1>` element on the page: the article name in the page header. Replace other the`<h1>` headings with `<h2>`, `<h3>`, and `<h4>`
+    - Please don't change text in the headings
+4. **Update external links (http, https) so that they open in a new tab:**
+    - Use the `target` attribute
+    - There should be 3 updates
+5. **Remove the redundant role attributes:**
+    - There should be 2 delitions
