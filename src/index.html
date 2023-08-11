@@ -1,283 +1,94 @@
 <!DOCTYPE html>
-<html lang="en-US" dir="ltr">
+<html lang="en-US">
   <head>
-    <title>Accessibility fundamentals and HTML semantic</title>
-    <meta charset="UTF-8" >
-    <link rel="icon" type="image/x-icon" href="images/favicon.ico" >
-    <link rel="stylesheet" href="./index.css" >
+    <meta charset="UTF-8">
+    <title>My main page with navigation menu</title>
+    <link rel="icon" type="image/x-icon" href="images/favicon.ico">
   </head>
 
   <body>
     <header>
-      <h1>Accessibility fundamentals and HTML semantic</h1>
       <nav>
         <ul role="menu">
+          <li role="menuitem"><a href="index.html">Home</a></li>
+          <li role="menuitem"><a href="#about">About</a></li>
+          <li role="menuitem"><a href="gallery.html">Gallery</a></li>
           <li role="menuitem">
-            <a target="_blank" href="#html_and_accessibility"
-              >A good basis for accessibility</a
-            >
-            <ul role="menu">
-              <li role="menuitem">
-                <a target="_blank" href="#good_semantics">Good Semantic</a>
-              </li>
-              <li role="menuitem">
-                <a target="_blank" href="#text_content">Text content</a>
-              </li>
-              <li role="menuitem">
-                <a target="_blank" href="#page_layouts">Page layouts</a>
-              </li>
-            </ul>
-          </li>
-          <li role="menuitem">
-            <a target="_blank" href="#address">Contact us</a>
+            <a href="https://www.w3.org/" target="_blank">Help</a>
           </li>
         </ul>
       </nav>
     </header>
+
     <main>
-      <article>
-        <h2>HTML: A good basis for accessibility</h2>
-        <section aria-labelledby="html_and_accessibility">
-          <h3>
-            <a
-              target="_blank"
-              href="#html_and_accessibility"
-              title="Permalink to HTML and accessibility"
-            >
-              HTML and accessibility
-            </a>
-          </h3>
-          <div class="section-content" id="html_and_accessibility">
-            <p>
-              As you learn more about HTML — read more resources, look at more
-              examples, etc. — you'll keep seeing a common theme: the importance
-              of using semantic HTML (sometimes called POSH, or Plain Old
-              Semantic HTML). This means using the correct HTML elements for
-              their intended purpose as much as possible.
-            </p>
-            <p>
-              You might wonder why this is so important. After all, you can use
-              a combination of CSS and JavaScript to make just about any HTML
-              element behave in whatever way you want. For example, a control
-              button to play a video on your site could be marked up like this:
-            </p>
-            <p>
-              Not only do HTML <code>&lt;button&gt;</code>s have some suitable
-              styling applied by default (which you will probably want to
-              override), they also have built-in keyboard accessibility — users
-              can navigate between buttons using the <kbd>Tab</kbd> key and
-              activate their selection using <kbd>Return</kbd> or
-              <kbd>Enter</kbd>.
-            </p>
-            <p>
-              Semantic HTML doesn't take any longer to write than non-semantic
-              (bad) markup if you do it consistently from the start of your
-              project. Even better, semantic markup has other benefits beyond
-              accessibility:
-            </p>
-            <ol>
-              <li>
-                <strong>Easier to develop with</strong> — as mentioned above,
-                you get some functionality for free, plus it is arguably easier
-                to understand.
-              </li>
-              <li>
-                <strong>Better on mobile</strong> — semantic HTML is arguably
-                lighter in file size than non-semantic spaghetti code, and
-                easier to make responsive.
-              </li>
-              <li>
-                <strong>Good for SEO</strong> — search engines give more
-                importance to keywords inside headings, links, etc. than
-                keywords included in non-semantic <code>&lt;div&gt;</code>s,
-                etc., so your documents will be more findable by customers.
-              </li>
-            </ol>
-            <p>Let's get on and look at accessible HTML in more detail.</p>
-          </div>
-        </section>
-        <section aria-labelledby="good_semantics">
-          <h3>
-            <a
-              target="_blank"
-              href="#good_semantics"
-              title="Permalink to Good Semantic"
-            >
-              Good semantics
-            </a>
-          </h3>
-          <div class="section-content" id="good_semantics">
-            <p>
-              We've already talked about the importance of proper semantics, and
-              why we should use the right HTML element for the job. This cannot
-              be ignored, as it is one of the main places that accessibility is
-              badly broken if not handled properly.
-            </p>
-            <p>
-              Out there on the web, the truth is that people do some very
-              strange things with HTML markup. Some abuses of HTML are due to
-              legacy practices that have not been completely forgotten, and some
-              are just plain ignorance. Whatever the case, you should replace
-              such bad code.
-            </p>
-            <p>
-              Sometimes you are not in the position to get rid of lousy markup —
-              your pages might be generated by some kind of server-side
-              framework over which you don't have full control, or you might
-              have third party content on your page (such as ad banners) over
-              which you have no control.
-            </p>
-            <p>
-              The goal isn't "all or nothing"; every improvement you can make
-              will help the cause of accessibility.
-            </p>
-          </div>
-
-          <section aria-labelledby="text_content">
-            <h4>
-              <a
-                target="_blank"
-                href="#text_content"
-                title="Permalink to Text content"
-                >Text content</a
-              >
-            </h4>
-            <div class="section-content" id="text_content">
-              <p>
-                One of the best accessibility aids a screen reader user can have
-                is an excellent content structure with headings, paragraphs,
-                lists, etc. An excellent semantic example might look something
-                like the following:
-              </p>
-              <ol>
-                <li>
-                  The screen reader reads each header out as you progress
-                  through the content, notifying you what a heading is, what is
-                  a paragraph, etc.
-                </li>
-                <li>
-                  It stops after each element, letting you go at whatever pace
-                  is comfortable for you.
-                </li>
-                <li>
-                  You can jump to the next/previous heading in many screen
-                  readers.
-                </li>
-                <li>
-                  You can also bring up a list of all headings in many screen
-                  readers, allowing you to use them as a handy table of contents
-                  to find specific content.
-                </li>
-              </ol>
-              <p>
-                People sometimes write headings, paragraphs, etc. using
-                presentational HTML and line breaks, something like the
-                following:
-              </p>
-              <p>
-                There are other issues too beyond accessibility — it is harder
-                to style the content using CSS, or manipulate it with
-                JavaScript, for example, because there are no elements to use as
-                selectors.
-              </p>
-            </div>
-          </section>
-
-          <section aria-labelledby="page_layouts">
-            <h4>
-              <a
-                target="_blank"
-                href="#page_layouts"
-                title="Permalink to Page layouts"
-                >Page layouts</a
-              >
-            </h4>
-            <div class="section-content" id="page_layouts">
-              <figure>
-                <img
-                  src="images/code-example.PNG"
-                  alt="modern website structure example"
-                >
-                <figcaption>modern website structure example</figcaption>
-              </figure>
-              <p>
-                In the bad old days, people used to create page layouts using
-                HTML tables — using different table cells to contain the header,
-                footer, sidebar, main content column, etc. This is not a good
-                idea because a screen reader will likely give out confusing
-                readouts, especially if the layout is complex and has many
-                nested tables.
-              </p>
-              <p>
-                Try our example
-                <a
-                  target="_blank"
-                  href="https://mdn.github.io/learning-area/accessibility/html/table-layout.html"
-                  rel="noopener"
-                  >table-layout.html</a
-                >
-                example, which looks something like this:
-              </p>
-              <p>
-                If you try to navigate this using a screen reader, it will
-                probably tell you that there's a table to be looked at (although
-                some screen readers can guess the difference between table
-                layouts and data tables). You'll then likely (depending on which
-                screen reader you're using) have to go down into the table as an
-                object and look at its features separately, then get out of the
-                table again to carry on navigating the content.
-              </p>
-              <p>
-                Table layouts are a relic of the past — they made sense back
-                when CSS support was not widespread in browsers, but now they
-                just create confusion for screen reader users. Additionally,
-                their source code requires more markup, which makes them less
-                flexible and more difficult to maintain. You can verify these
-                claims by comparing your previous experience with a
-                <a
-                  target="_blank"
-                  href="https://mdn.github.io/learning-area/html/introduction-to-html/document_and_website_structure/"
-                  rel="noopener"
-                  >more modern website structure example</a
-                >, which could look something like this:
-              </p>
-              <!-- Add image with code example here -->
-              <p>
-                If you try our more modern structure example with a screen
-                reader, you'll see that the layout markup no longer gets in the
-                way and confuses the content readout. It is also much leaner and
-                smaller in terms of code size, which means easier to maintain
-                code, and less bandwidth for the user to download (particularly
-                prevalent for those on slow connections).
-              </p>
-            </div>
-          </section>
-        </section>
-      </article>
+      <section>
+        <h1>Heading 1</h1>
+        <p>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi magna
+          ipsum, dignissim in nisl a, tincidunt venenatis purus. Sed blandit
+          orci leo, at dictum magna lobortis sit amet. Aliquam in libero porta,
+          cursus ligula ac, rhoncus nisi. Quisque fermentum ultrices egestas.
+          Morbi et leo malesuada, feugiat augue eget, accumsan metus. Curabitur
+          id turpis condimentum, pharetra diam blandit, faucibus libero. Ut
+          finibus nisl gravida urna eleifend elementum. Duis finibus iaculis
+          mauris ac pretium. Fusce nec nibh mattis, facilisis lacus ornare,
+          consectetur erat. Nulla ex metus, pharetra ut commodo vitae, ultricies
+          non quam.
+        </p>
+        <p>
+          Proin pretium nibh non elit dapibus, et tempor lectus finibus.
+          Curabitur posuere, sem a bibendum auctor, ante augue sollicitudin
+          lacus, eget laoreet libero justo eget purus. Vestibulum volutpat sit
+          amet augue eu ornare. Quisque quis nulla sed ex luctus venenatis at id
+          nibh. Etiam elementum urna at fermentum malesuada. Curabitur placerat
+          porttitor diam in blandit. Duis iaculis facilisis lorem. Curabitur vel
+          suscipit libero. Ut non hendrerit arcu, in porttitor augue. Sed vitae
+          felis eros. Interdum et malesuada fames ac ante ipsum primis in
+          faucibus. Curabitur ornare ipsum nec quam tincidunt sodales. Nunc dui
+          risus, tristique id leo eu, vestibulum gravida lectus. Donec sed justo
+          faucibus, dapibus ipsum ut, lacinia metus.
+        </p>
+      </section>
+      <section>
+        <h2 id="about">Heading 2</h2>
+        <p>
+          Proin hendrerit eu augue vitae porttitor. Vestibulum rutrum tempor
+          risus consectetur pellentesque. Donec rhoncus augue ut nisl rutrum,
+          sed feugiat sem hendrerit. Cras porttitor, est at hendrerit tincidunt,
+          nisl felis ullamcorper elit, eu vulputate dui ex eget risus. Integer
+          convallis purus eget velit sodales sodales. Aenean non aliquam felis,
+          at aliquam velit. Nunc fringilla sagittis ipsum ut semper. Quisque
+          vitae enim a sapien congue congue eget vitae dui. Sed interdum risus
+          quis libero condimentum egestas. Aenean at leo nisi. Suspendisse
+          eleifend nulla non blandit gravida. Nulla eu sodales eros, et
+          fringilla velit. Praesent a mi et nisi laoreet commodo. Suspendisse
+          potenti. Ut ac ipsum cursus, fermentum quam cursus, eleifend massa.
+        </p>
+        <p>
+          Aliquam vitae mi eget arcu dapibus lobortis eget a eros. Morbi dapibus
+          ullamcorper egestas. Curabitur quis consequat elit. Phasellus posuere
+          ante id lectus commodo, eget iaculis orci consequat. Nam semper
+          dapibus sem, eu pulvinar felis efficitur id. Ut molestie dolor a dolor
+          elementum, id euismod orci gravida. Nam ut urna vel tortor sodales
+          sollicitudin in vitae eros. Nullam elementum lorem vulputate vulputate
+          efficitur. Nullam vulputate varius nisi, vitae lacinia libero
+          consectetur eu. Maecenas ac tortor vel neque condimentum laoreet eget
+          at libero. Quisque aliquam sem enim, ac hendrerit nibh condimentum
+          sed. Vivamus nec ultrices sapien.
+        </p>
+        <p>
+          Pellentesque vel interdum quam. Aliquam erat volutpat. Maecenas nec
+          vestibulum neque. Duis rutrum justo tortor, ac tempus elit lacinia
+          sodales. Nulla quis mauris egestas, congue est et, volutpat purus.
+          Curabitur ac varius tellus. In ullamcorper nulla nec ligula elementum
+          venenatis. Sed vitae dictum felis, elementum cursus orci. Quisque
+          maximus neque ut interdum tristique. In consequat orci sit amet urna
+          sodales suscipit. Nunc sed quam placerat, imperdiet justo ac, semper
+          magna. Praesent eu commodo arcu, in viverra libero. Vestibulum ac
+          convallis orci. Donec et pellentesque felis, ac varius nulla. Aliquam
+          nunc ante, maximus pretium massa sit amet, aliquet aliquet lorem.
+        </p>
+      </section>
     </main>
-    <aside>
-      <p>
-        Resources for Developers, by Developers. <br>
-        Documenting web technologies, including CSS, HTML, and JavaScript, since
-        2005.
-      </p>
-      <button type="button">click to visit</button>
-    </aside>
-    <footer>
-      <p>
-        Visit Mozilla Corporation’s not-for-profit parent, the Mozilla
-        Foundation.
-      </p>
-      <address id="address">
-        You can contact author at
-        <a target="_blank" href="http://www.somedomain.com/contact"
-          >www.somedomain.com</a
-        >.<br>
-        You may also want to visit us:<br>
-        Mozilla Foundation<br>
-        1981 Landings Drive Building K<br>
-        Mountain View, CA 94043-0801 USA
-      </address>
-    </footer>
   </body>
 </html>
