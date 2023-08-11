@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <title>My gallery page</title>
+    <link rel="icon" type="image/x-icon" href="images/favicon.ico">
+  </head>
+
+  <body>
+    <main>
+      <h1>Beauty of Nature Picture</h1>
+      <div id="picture">
+        <picture>
+          <source media="(max-width: 480px)" srcset="img/pic1.jpg">
+          <source media="(max-width: 780px)" srcset="img/pic2.jpg">
+          <source media="(max-width: 1024px)" srcset="img/pic3.jpg">
+          <img src="img/pic4.jpg" alt="Beauty of Nature">
+        </picture>
+      </div>
+    </main>
+  </body>
+</html>

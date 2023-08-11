@@ -4,151 +4,217 @@ const { HtmlValidate } = require('html-validate');
 const htmlValidateConfig = require('../test-utils/htmlValidateConfig.json');
 const { readTextFile } = require('../test-utils/readTextFile');
 const { normalizeStringForTest } = require('../test-utils/normalizeStringForTest');
+const { getChildCommentNodesInElement } = require('../test-utils/getChildCommentNodesInElement');
 
 const { JSDOM } = require('jsdom');
 
-describe('Accessibility fundamentals and HTML semantic', () => {
+describe('Linking and Images', () => {
     let htmlString;
 
     let dom;
     let document;
 
-    beforeEach(async () => {
-        const filePath = path.join(__dirname, 'index.html');
-        htmlString = await readTextFile(filePath);
+    describe('src/index.html', () => {
+        beforeEach(async () => {
+            const filePath = path.join(__dirname, 'index.html');
+            htmlString = await readTextFile(filePath);
+    
+            dom = new JSDOM(htmlString);
+            document = dom.window.document;
+        });
+    
+        it('html page should be valid', () => {
+            const htmlvalidate = new HtmlValidate();
+            const report = htmlvalidate.validateString(htmlString, htmlValidateConfig);
+            
+            expect(report).toEqual(expect.objectContaining({ valid: true }));
+        });
 
-        dom = new JSDOM(htmlString);
-        document = dom.window.document;
+        describe('<header>', () => {
+            let header;
+            let links;
+            
+            beforeEach(() => {
+                header = document.querySelector('body > header');
+                links = header.querySelectorAll('nav > ul > li > a');
+            });
+
+            it('should have nav tag in the header', () => {
+                const nav = header.querySelector('nav');
+
+                expect(nav).not.toBeNull();
+            });
+
+            it('should have a list in the navigation menu', () => {
+                const ul = header.querySelector('nav > ul');
+
+                expect(ul).not.toBeNull();
+            });
+
+            it('links should be wrapped with list element tags', () => {
+                expect(links.length >= 4).toBe(true);
+            });
+
+            describe('"Home" link', () => {
+                let link;
+
+                beforeEach(() => {
+                    link = links[0];
+                });
+
+                it('should have "Home" title', () => {
+                    const linkText = link.textContent.trim();
+
+                    expect(linkText).toBe('Home');
+                });
+
+                it('should have "index.html" as an address', () => {
+                    const linkHref = link.href;
+
+                    expect(linkHref).toBe('index.html');
+                });
+            });
+
+            describe('"About" link', () => {
+                let link;
+
+                beforeEach(() => {
+                    link = links[1];
+                });
+
+                it('should have "About" title', () => {
+                    const linkText = link.textContent.trim();
+
+                    expect(linkText).toBe('About');
+                });
+
+                it('should use anchor to the page element with id="about" as an address', () => {
+                    const linkHref = link.href;
+
+                    expect(linkHref).toBe('about:blank#about');
+                });
+            });
+
+            describe('"Gallery" link', () => {
+                let link;
+
+                beforeEach(() => {
+                    link = links[2];
+                });
+
+                it('should have "Gallery" title', () => {
+                    const linkText = link.textContent.trim();
+
+                    expect(linkText).toBe('Gallery');
+                });
+
+                it('should have "gallery.html" as an address', () => {
+                    const linkHref = link.href;
+
+                    expect(linkHref).toBe('gallery.html');
+                });
+            });
+
+            describe('"Help" link', () => {
+                let link;
+
+                beforeEach(() => {
+                    link = links[3];
+                });
+
+                it('should have "Help" title', () => {
+                    const linkText = link.textContent.trim();
+
+                    expect(linkText).toBe('Help');
+                });
+
+                it('should have "https://www.w3.org/" as an address', () => {
+                    const linkHref = link.href;
+
+                    expect(linkHref).toBe('https://www.w3.org/');
+                });
+
+                it('should open in the new tab', () => {
+                    const target = link.target;
+
+                    expect(target).toBe('_blank');
+                });
+            });
+        });
     });
 
-    it('html page should be valid', () => {
-        const htmlvalidate = new HtmlValidate();
-        const report = htmlvalidate.validateString(htmlString, htmlValidateConfig);
-        
-        expect(report).toEqual(expect.objectContaining({ valid: true }));
-    });
-
-    describe('semantic tags', () => {
-        it('should replace <div id="header"> with <header> tag', () => {
-            expect(document.querySelector('body > div#header')).toBeNull();
-            expect(document.querySelector('body > header')).not.toBeNull();
+    describe('src/gallery.html', () => {
+        beforeEach(async () => {
+            const filePath = path.join(__dirname, 'gallery.html');
+            htmlString = await readTextFile(filePath);
+    
+            dom = new JSDOM(htmlString);
+            document = dom.window.document;
         });
 
-        it('should replace <div id="menu"> with <nav> tag', () => {
-            expect(document.querySelector('div#menu')).toBeNull();
-            expect('body > header > nav').not.toBeNull();
+        it('html page should be valid', () => {
+            const htmlvalidate = new HtmlValidate();
+            const report = htmlvalidate.validateString(htmlString, htmlValidateConfig);
+            
+            expect(report).toEqual(expect.objectContaining({ valid: true }));
         });
 
-        it('should replace <div id="main"> with <main> tag', () => {
-            expect(document.querySelector('div#main')).toBeNull();
-            expect(document.querySelector('body > main')).not.toBeNull();
-        });
+        describe('<picture>', () => {
+            let picture;
+            let sources;
+            
+            beforeEach(() => {
+                picture = document.querySelector('body > main > #picture > picture');
 
-        it('should replace <div class="article"> with <article> tag', () => {
-            expect(document.querySelector('div.article')).toBeNull();
-            expect(document.querySelector('body > main > article')).not.toBeNull();
-        });
+                sources = Array.from(picture.querySelectorAll('source'));
+            });
 
-        it('should replace <div id="footer"> with <footer> tag', () => {
-            expect(document.querySelector('div#footer')).toBeNull();
-            expect(document.querySelector('body > footer')).not.toBeNull();
-        });
+            it('should have <picture> inside div with id="picture"', () => {
+                expect(picture).not.toBeNull();
+            });
 
-        it('should replace <div id="sidebar"> with <aside> tag', () => {
-            expect(document.querySelector('div#sidebar')).toBeNull();
-            expect(document.querySelector('body > aside')).not.toBeNull();
-        });
+            describe('if screen width is <= 480px', () => {
+                it('the `img/pic1.jpg` should be shown', () => {
+                    const source = sources
+                        .find((item) => item.media.trim() === '(max-width: 480px)');
 
-        it('should replace all <div class="section"> with <section> tag', () => {
-            expect(document.querySelectorAll('div.section').length).toBe(0);
-            expect(document.querySelectorAll('body > main > article section').length).toBe(4);
-        });
-    });
+                    expect(source.srcset).toBe('img/pic1.jpg');
+                });
+            });
 
-    describe('<figure>', () => {
-        let figure, image, figcaption;
+            describe('if screen width is <= 780px', () => {
+                it('the `img/pic2.jpg` should be shown', () => {
+                    const source = sources
+                        .find((item) => item.media.trim() === '(max-width: 780px)');
 
-        beforeEach(() => {
-            figure = document.querySelector('body > main > article section > div#page_layouts > figure');
-            image = figure.querySelector('img');
-            figcaption = figure.querySelector('img ~ figcaption');
-        });
+                    expect(source.srcset).toBe('img/pic2.jpg');
+                });
+            });
 
-        it('should add <figure> tag into proper section', () => {
-            expect(figure).not.toBeNull();
-        });
+            describe('if screen width is <= 1024px', () => {
+                it('the `img/pic3.jpg` should be shown', () => {
+                    const source = sources
+                        .find((item) => item.media.trim() === '(max-width: 1024px)');
 
-        it('should add <img> tag into proper section', () => {
-            expect(image).not.toBeNull();
-        });
+                    expect(source.srcset).toBe('img/pic3.jpg');
+                });
+            });
 
-        it('should add proper source to <img> tag', () => {
-            expect(normalizeStringForTest(image.src.replace('./', ''))).toBe('images/code-example.png');
-        });
+            describe('default image', () => {
+                let img;
 
-        it('should add alt attribute to <img>', () => {
-            expect(normalizeStringForTest(image.alt)).toBe('modern website structure example');
-        });
+                beforeEach(() => {
+                    img = picture.querySelector('img');
+                });
 
-        it('should add <figcaption> tag after <img> tag', () => {
-            expect(figcaption).not.toBeNull();
-        });
+                it('should be img/pic4.jpg', () => {
+                    expect(img.src).toBe('img/pic4.jpg');
+                });
 
-        it('should add proper text in <figcaption>', () => {
-            expect(normalizeStringForTest(figcaption.textContent)).toBe('modern website structure example');
-        });
-    });
-
-    describe('headings', () => {
-        it('should leave only one <h1> tag on the page in header', () => {
-            expect(document.querySelectorAll('h1').length).toBe(1);
-            expect(normalizeStringForTest(document.querySelector('header > h1').textContent)).toBe('accessibility fundamentals and html semantic');
-        });
-
-        it('should show article header as <h2> tag', () => {
-            expect(document.querySelectorAll('h2').length).toBe(1);
-            expect(normalizeStringForTest(document.querySelector('main > article > h2').textContent)).toBe('html: a good basis for accessibility');
-        });
-
-        it('should show sections headers as <h3> tags', () => {
-            expect(document.querySelectorAll('h3').length).toBe(2);
-            expect(document.querySelectorAll('main > article > section > h3').length).toBe(2);
-        });
-
-        it('should show nested sections headers as <h4> tags', () => {
-            expect(document.querySelectorAll('h4').length).toBe(2);
-            expect(document.querySelectorAll('main > article > section > section > h4').length).toBe(2);
-        });
-
-        it('should not add other headers to the document', () => {
-            expect(document.querySelectorAll('h5').length).toBe(0);
-            expect(document.querySelectorAll('h6').length).toBe(0);
-        })
-    });
-
-    describe('external links', () => {
-        it('should add target attribute to all external links', () => {
-            const externalLinks = [...document.querySelectorAll('a')].filter((link) => link.href.startsWith('http'));
-            const targetAttributes = externalLinks.map((link) => link.target).filter((target) => target === '_blank');
-            expect(targetAttributes.length).toEqual(externalLinks.length);
-        })
-    });
-
-    describe('role attributes', () => {
-        it('should leave all role="menu" in <nav>', () => {
-            expect(document.querySelectorAll('header > nav ul[role="menu"]').length).toBe(2);
-        });
-
-        it('should leave all role="menuitem" in <nav>', () => {
-            expect(document.querySelectorAll('header > nav li[role="menuitem"]').length).toBe(5);
-        });
-
-        it('should remove role attribute from <header>', () => {
-            expect(document.querySelector('header').hasAttribute('role')).toBe(false);
-        });
-
-        it('should remove role attribute from <button>', () => {
-            expect(document.querySelector('aside > button').hasAttribute('role')).toBe(false);
+                it('have an alternative text', () => {
+                    expect(img.alt.trim()).toBe('Beauty of Nature');
+                });
+            });
         });
     });
 });
