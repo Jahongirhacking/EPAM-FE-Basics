@@ -1,11 +1,11 @@
-# Linking and Images
+# HTML Text elements
 
-## Creating Menu and adding Images
+## Add and edit HTML tags in the article about Apollo 11 mission.
 
 ## Before we start
 
-1.	This practical task is verified automatically with tests.
-2.	Please put all your `HTML` code in the `src/index.html` and `src/gallery.html` file. If you use any other file, we will not be able to verify it.
+1.This practical task is verified automatically with tests.
+2.Please put all your `HTML` code in the `src/index.html` file. If you use any other file, we will not be able to verify it.
 3. Please, don't change the page structure, it may affect tests.
 
 ## Development
@@ -18,29 +18,30 @@ To be sure you submit a correct solution, you can verify it locally. This requir
 
 ## Task Requirements
 
-This task consists of two parts. In the first part, you will try your hand at linking web pages by creating a navigation menu. In the second part, you will add to the page an image that responds to screen size. 
+Add and update HTML tags in the text.
 
-Please note that there are specific requirements for structure and content. 
+Please, note you should edit the `src/index.html` file. We can't verify your solution if you use a different file.
 
-### 1. Create Navigation menu
+Don't change the overall page structure, it may break an automation check.
 
-**In the `src/index.html` file:**
-    - Add the navigation menu to the `header` tag.
-        - The menu should consist of the four items listed below:
-            - Title: `Home`, link address: `index.html`
-            - Title: `About`, link address: anchor to the page element with `id="about"` 
-            - Title: `Gallery`, link address: `gallery.html`
-            - Title: `Help`, link address: `https://www.w3.org/`, **opens in the new tab** 
-    - The menu items should not be numbered. 
-    - **The order of the links is important**; the menu will not pass testing if the order is different from the one above. 
+### You should add and edit:
 
-### 2. Add a responsive image
+1. **Headings**. Please, replace generic `<div>` elements with headings of the correct level.
+    - `<h1>` should be used only once for the page heading.
+    - Every `<article>` should have `<h2>` heading.
+    - Every `<section>` should have `<h3>` heading.
 
-**In the `src/gallery.html` file:**
-    - Using the `picture` tag, add the image to the `div` element with the attribute `id="picture"` 
-    - The image should have the alternative text `Beauty of Nature`. 
-    - Depending on the screen size, the page should display the proper images from the `src/img` folder:  
-        - If the screen width is `<= 480px`, the `img/pic1.jpg` should be displayed. 
-        - If the screen width is `<= 780px`, the `img/pic2.jpg` should be displayed. 
-        - If the screen width is `<= 1024px`, the `img/pic3.jpg` should be displayed. 
-        - The default image should be `img/pic4.jpg` with the alternative text `Beauty of Nature`. 
+2. **Lists**. Add HTML lists markup to the listed data. Please, use data that is already on the page.
+    - In the `"Personnel"` article the `"Prime crew"` section should have an **ordered** list of all the crew members.
+    - In the `"Personnel"` article the `"Backup crew"` section should have an **ordered** list of all the crew members.
+    - In the `"Personnel"` article the `"Flight directors"` section should have an **unordered** list of all the flight directors who participated in the program.
+
+3.  **Abbreviations, quotations, times, and dates.**
+    - In the first `<p>` paragraph from the top (the one which starts with `"Apollo 11 (July 16–24, 1969) was the American spaceflight..."`) find the date and time: `July 20, 1969, at 20:17 UTC` and wrap it to the date-time tag with `datetime` attribute value: `1969-07-20T20:17:00.000Z`.
+    - In the second `<p>` paragraph from the top (the one which starts with `"Apollo 11 was launched by a Saturn V rocket from Kennedy Space Center"`) wrap `NASA` text with an abbreviation tag with such text in the title attribute: `The National Aeronautics and Space Administration`.
+    - In the `"Background"` `<article>` please, add a correct tag for a Kennedy quote. A quote starts with: `I believe that this nation should commit itself to achieving...` and ends with: `For all of us must work to put him there.`. Text `"Kennedy's speech to Congress"` - should be wrapped with `<cite>` tag.
+
+4. **Emphasized, italic, superscript text**
+    - In the third `<p>` paragraph from the top (the one which starts with `"Armstrong's first step onto the lunar surface..."`) find Armstrong's quote: `"one small step for [a] man, one giant leap for mankind."` and emphasize it by wrapping with `<em>` tag. Don't forget to include `"` at the start and at the end of the quote.
+    - After Armstrong's quote find a link with text `[1]`. Make this link a superscript text by using the correct tag.
+    - Make italic any 3 chunks of text on the page. Every text chunk should be at least 3 symbols long.
