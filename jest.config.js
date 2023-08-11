@@ -7,10 +7,11 @@ module.exports = {
   roots: [
     "./src"
   ],
-  "moduleFileExtensions": [
+  moduleFileExtensions: [
     "js",
     "html",
-    "htm"
+    "htm",
+    "css",
   ],
   reporters: [
       ["jest-xunit", { "filename": "xunit.xml" }] // We can't pass options from CLI

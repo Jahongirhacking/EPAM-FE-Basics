@@ -3,217 +3,245 @@ const { HtmlValidate } = require('html-validate');
 
 const htmlValidateConfig = require('../test-utils/htmlValidateConfig.json');
 const { readTextFile } = require('../test-utils/readTextFile');
-const { normalizeStringForTest } = require('../test-utils/normalizeStringForTest');
-const { getChildCommentNodesInElement } = require('../test-utils/getChildCommentNodesInElement');
 
 const { JSDOM } = require('jsdom');
 
-describe('Linking and Images', () => {
+describe('HTML Text elements', () => {
     let htmlString;
 
     let dom;
     let document;
 
-    describe('src/index.html', () => {
-        beforeEach(async () => {
-            const filePath = path.join(__dirname, 'index.html');
-            htmlString = await readTextFile(filePath);
-    
-            dom = new JSDOM(htmlString);
-            document = dom.window.document;
+    beforeEach(async () => {
+        const filePath = path.join(__dirname, 'index.html');
+        htmlString = await readTextFile(filePath);
+
+        // Create fake DOM
+        dom = new JSDOM(htmlString, {
+            resources: 'usable'
         });
-    
-        it('html page should be valid', () => {
-            const htmlvalidate = new HtmlValidate();
-            const report = htmlvalidate.validateString(htmlString, htmlValidateConfig);
-            
-            expect(report).toEqual(expect.objectContaining({ valid: true }));
+        document = dom.window.document;
+    });
+
+    // This test is mandatory for all the HTML related tasks
+    it('html page should be valid', () => {
+        const htmlvalidate = new HtmlValidate();
+        const report = htmlvalidate.validateString(htmlString, htmlValidateConfig);
+        
+        expect(report).toEqual(expect.objectContaining({ valid: true }));
+    });
+
+    describe('Headings', () => {
+        describe('<h1>', () => {
+            it('should have only one such heading', () => {
+                const h1s = document.querySelectorAll('body h1');
+        
+                expect(h1s.length).toBe(1);
+            });
+
+
+            it('should be used for a main heading on the page', () => {
+                const h1 = document.querySelector('body h1');
+        
+                expect(h1.textContent.trim()).toBe('Apollo 11');
+            });
         });
 
-        describe('<header>', () => {
-            let header;
-            let links;
-            
+        describe('<h2>', () => {
+            let h2s;
+
             beforeEach(() => {
-                header = document.querySelector('body > header');
-                links = header.querySelectorAll('nav > ul > li > a');
+                h2s = document.querySelectorAll('body > article > h2');
             });
 
-            it('should have nav tag in the header', () => {
-                const nav = header.querySelector('nav');
-
-                expect(nav).not.toBeNull();
+            it('should have such heading for each article', () => {
+                expect(h2s.length).toBe(2);
             });
 
-            it('should have a list in the navigation menu', () => {
-                const ul = header.querySelector('nav > ul');
-
-                expect(ul).not.toBeNull();
+            it('should be used for a "Background" article', () => {
+                const h2 = h2s[0];
+        
+                expect(h2.textContent.trim()).toBe('Background');
             });
 
-            it('links should be wrapped with list element tags', () => {
-                expect(links.length >= 4).toBe(true);
+            it('should be used for a "Personnel" article', () => {
+                const h2 = h2s[1];
+        
+                expect(h2.textContent.trim()).toBe('Personnel');
+            });
+        });
+
+        describe('<h3>', () => {
+            let h3s;
+
+            beforeEach(() => {
+                h3s = document.querySelectorAll('body section > h3');
             });
 
-            describe('"Home" link', () => {
-                let link;
-
-                beforeEach(() => {
-                    link = links[0];
-                });
-
-                it('should have "Home" title', () => {
-                    const linkText = link.textContent.trim();
-
-                    expect(linkText).toBe('Home');
-                });
-
-                it('should have "index.html" as an address', () => {
-                    const linkHref = link.href;
-
-                    expect(linkHref).toBe('index.html');
-                });
+            it('should have such heading for each section', () => {
+                expect(h3s.length).toBe(4);
             });
 
-            describe('"About" link', () => {
-                let link;
+            it.each([
+                ['Prime crew', 0],
+                ['Backup crew', 1],
+                ['Flight directors', 2],
+                ['Citations', 3]
+            ])('should have "%s" heading in section', (expectedText, index) => {
+                h3s = document.querySelectorAll('body section > h3');
 
-                beforeEach(() => {
-                    link = links[1];
-                });
+                expect(h3s[index].textContent.trim()).toBe(expectedText);
+            })
+        });
+    });
 
-                it('should have "About" title', () => {
-                    const linkText = link.textContent.trim();
+    describe('Lists', () => {
+        describe('Prime crew list', () => {
+            it.each([
+                ['Commander - Neil A. Armstrong, Second and last spaceflight', 0],
+                ['Command Module Pilot - Michael Collins, Second and last spaceflight', 1],
+                ['Lunar Module Pilot - Edwin "Buzz" E. Aldrin Jr., Second and last spaceflight', 2],
+            ])('ordered list item should have correct text: "%s"', (expectedText, index) => {
+                const personnelArticle = document.querySelectorAll('body > article')[1];
+                const section = personnelArticle.querySelectorAll('section')[0];
+                const listItems = section.querySelectorAll('ol > li');
+                const li = listItems[index]
 
-                    expect(linkText).toBe('About');
-                });
-
-                it('should use anchor to the page element with id="about" as an address', () => {
-                    const linkHref = link.href;
-
-                    expect(linkHref).toBe('about:blank#about');
-                });
+                expect(li.textContent.trim()).toBe(expectedText);
             });
+        });
 
-            describe('"Gallery" link', () => {
-                let link;
+        describe('Backup crew list', () => {
+            it.each([
+                ['Commander - James A. Lovell Jr.', 0],
+                ['Command Module Pilot - William A. Anders', 1],
+                ['Lunar Module Pilot - Fred W. Haise Jr.', 2],
+            ])('ordered list item should have correct text: "%s"', (expectedText, index) => {
+                const personnelArticle = document.querySelectorAll('body > article')[1];
+                const section = personnelArticle.querySelectorAll('section')[1];
+                const listItems = section.querySelectorAll('ol > li');
+                const li = listItems[index]
 
-                beforeEach(() => {
-                    link = links[2];
-                });
-
-                it('should have "Gallery" title', () => {
-                    const linkText = link.textContent.trim();
-
-                    expect(linkText).toBe('Gallery');
-                });
-
-                it('should have "gallery.html" as an address', () => {
-                    const linkHref = link.href;
-
-                    expect(linkHref).toBe('gallery.html');
-                });
+                expect(li.textContent.trim()).toBe(expectedText);
             });
+        });
 
-            describe('"Help" link', () => {
-                let link;
+        describe('Flight directors list', () => {
+            it.each([
+                ['Clifford E. Charlesworth', 0],
+                ['Gerald D. Griffin', 1],
+                ['Gene Kranz', 2],
+                ['Glynn Lunney', 3],
+                ['Milton Windler', 4],
+            ])('unordered list item should have correct text: "%s"', (expectedText, index) => {
+                const personnelArticle = document.querySelectorAll('body > article')[1];
+                const section = personnelArticle.querySelectorAll('section')[2];
+                const listItems = section.querySelectorAll('ul > li');
+                const li = listItems[index]
 
-                beforeEach(() => {
-                    link = links[3];
-                });
-
-                it('should have "Help" title', () => {
-                    const linkText = link.textContent.trim();
-
-                    expect(linkText).toBe('Help');
-                });
-
-                it('should have "https://www.w3.org/" as an address', () => {
-                    const linkHref = link.href;
-
-                    expect(linkHref).toBe('https://www.w3.org/');
-                });
-
-                it('should open in the new tab', () => {
-                    const target = link.target;
-
-                    expect(target).toBe('_blank');
-                });
+                expect(li.textContent.trim()).toBe(expectedText);
             });
         });
     });
 
-    describe('src/gallery.html', () => {
-        beforeEach(async () => {
-            const filePath = path.join(__dirname, 'gallery.html');
-            htmlString = await readTextFile(filePath);
-    
-            dom = new JSDOM(htmlString);
-            document = dom.window.document;
-        });
+    describe('Abbreviations, quotations, times, and dates', () => {
+        describe('date and time', () => {
+            let time;
 
-        it('html page should be valid', () => {
-            const htmlvalidate = new HtmlValidate();
-            const report = htmlvalidate.validateString(htmlString, htmlValidateConfig);
-            
-            expect(report).toEqual(expect.objectContaining({ valid: true }));
-        });
-
-        describe('<picture>', () => {
-            let picture;
-            let sources;
-            
             beforeEach(() => {
-                picture = document.querySelector('body > main > #picture > picture');
-
-                sources = Array.from(picture.querySelectorAll('source'));
+                const p = document.querySelectorAll('body > p')[0];
+                time = p.querySelector('time');
             });
 
-            it('should have <picture> inside div with id="picture"', () => {
-                expect(picture).not.toBeNull();
+            it('should wrap date in the first paragraph', () => {
+                expect(time).not.toBeNull();
             });
 
-            describe('if screen width is <= 480px', () => {
-                it('the `img/pic1.jpg` should be shown', () => {
-                    const source = sources
-                        .find((item) => item.media.trim() === '(max-width: 480px)');
+            it('should add dateime attribute to the tag', () => {
+                let attributeValue = time.getAttribute('datetime').trim();
 
-                    expect(source.srcset).toBe('img/pic1.jpg');
-                });
+                expect(attributeValue).toBe('1969-07-20T20:17:00.000Z');
+            });
+        });
+
+        describe('Abbreviation', () => {
+            let abbr;
+
+            beforeEach(() => {
+                const p = document.querySelectorAll('body > p')[1];
+                abbr = p.querySelector('abbr');
             });
 
-            describe('if screen width is <= 780px', () => {
-                it('the `img/pic2.jpg` should be shown', () => {
-                    const source = sources
-                        .find((item) => item.media.trim() === '(max-width: 780px)');
-
-                    expect(source.srcset).toBe('img/pic2.jpg');
-                });
+            it('should wrap the NASA', () => {
+                expect(abbr).not.toBeNull();
             });
 
-            describe('if screen width is <= 1024px', () => {
-                it('the `img/pic3.jpg` should be shown', () => {
-                    const source = sources
-                        .find((item) => item.media.trim() === '(max-width: 1024px)');
+            it('should add title to the tag', () => {
+                let attributeValue = abbr.getAttribute('title').trim();
 
-                    expect(source.srcset).toBe('img/pic3.jpg');
-                });
+                expect(attributeValue)
+                    .toBe('The National Aeronautics and Space Administration');
+            });
+        });
+
+        describe('Quote', () => {
+            let blockQuote;
+
+            beforeEach(() => {
+                const p = document.querySelectorAll('body > article')[0];
+                blockQuote = p.querySelector('blockquote');
             });
 
-            describe('default image', () => {
-                let img;
+            it('should wrap the quote with a correct tag', () => {
+                expect(blockQuote).not.toBeNull();
+            });
 
-                beforeEach(() => {
-                    img = picture.querySelector('img');
-                });
+            it('should have Kennedy\'s quote text inside', () => {
+                const p = blockQuote.querySelector('p');
 
-                it('should be img/pic4.jpg', () => {
-                    expect(img.src).toBe('img/pic4.jpg');
-                });
+                expect(p.textContent.trim().startsWith('I believe that this nation'))
+                    .toBe(true);
+            });
 
-                it('have an alternative text', () => {
-                    expect(img.alt.trim()).toBe('Beauty of Nature');
-                });
+            it('should have correct text in a cite tag', () => {
+                const cite = blockQuote.querySelector('cite');
+
+                expect(cite.textContent.trim())
+                    .toBe('Kennedy\'s speech to Congress');
+            });
+        });
+    });
+
+    describe('Emphasized, italic, superscript text', () => {
+        let p;
+
+        beforeEach(() => {
+            p = document.querySelectorAll('body > p')[2];
+        });
+
+        it('should emphasize quote', () => {
+            const em = p.querySelector('em');
+
+            expect(em.textContent.trim())
+                .toBe('"one small step for [a] man, one giant leap for mankind."')
+        });
+
+        it('should make from a link a superscript', () => {
+            const a = p.querySelector('a');
+            const superscript = a.parentElement;
+
+            expect(superscript.tagName).toBe('SUP');
+        });
+
+        describe('italic', () => {
+            it.each([
+                [0],
+                [1],
+                [2]
+            ])('should have italized text chunk #%i with at list 3 symbols', (index) => {
+                const i = document.querySelectorAll('i')[index];
+                
+                expect(i.textContent.trim().length >= 3).toBe(true);
             });
         });
     });
