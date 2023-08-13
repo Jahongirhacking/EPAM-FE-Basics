@@ -6,13 +6,11 @@ const { readTextFile } = require('../test-utils/readTextFile');
 
 const { JSDOM } = require('jsdom');
 
-describe('Structuring Tabular Data ', () => {
+describe('HTML Text elements', () => {
     let htmlString;
 
     let dom;
     let document;
-
-    let table;
 
     beforeEach(async () => {
         const filePath = path.join(__dirname, 'index.html');
@@ -22,10 +20,7 @@ describe('Structuring Tabular Data ', () => {
         dom = new JSDOM(htmlString, {
             resources: 'usable'
         });
-
         document = dom.window.document;
-
-        table = document.querySelector('table');
     });
 
     // This test is mandatory for all the HTML related tasks
@@ -36,162 +31,217 @@ describe('Structuring Tabular Data ', () => {
         expect(report).toEqual(expect.objectContaining({ valid: true }));
     });
 
-    describe('<table>', () => {
-        it('should be defined', () => {
-            expect(table).not.toBeNull();
+    describe('Headings', () => {
+        describe('<h1>', () => {
+            it('should have only one such heading', () => {
+                const h1s = document.querySelectorAll('body h1');
+        
+                expect(h1s.length).toBe(1);
+            });
+
+
+            it('should be used for a main heading on the page', () => {
+                const h1 = document.querySelector('body h1');
+        
+                expect(h1.textContent.trim()).toBe('Apollo 11');
+            });
         });
 
-        it('should be only one on the page', () => {
-            const allTables = document.querySelectorAll('table');
-            
-            expect(allTables.length).toBe(1);
-        });
+        describe('<h2>', () => {
+            let h2s;
 
-        it('should have correct caption', () => {
-            const caption = table.querySelector('caption');
-            const captionTextContent = caption.textContent.trim();
-
-            expect(captionTextContent)
-                .toBe('Shop list for 25th of May');
-        });
-    });
-
-    describe('<colgroup>', () => {
-        let cols;
-
-        beforeEach(() => {
-            cols = document.querySelectorAll('table > colgroup > col') || [];
-        });
-
-        it('should have 3 <col> elements', () => {
-            expect(cols.length).toBe(3);
-        });
-
-        it('the second <col> should have span of 2', () => {
-            const col = cols[1];
-
-            expect(col.span).toBe(2);
-        });
-    });
-
-    describe('<thead>', () => {
-        let thead;
-        let trs;
-
-        beforeEach(() => {
-            thead = document.querySelector('table > thead');
-
-            trs = document.querySelectorAll('table > thead > tr');
-        });
-
-        it('should be defined', () => {
-            expect(thead).not.toBeNull();
-        });
-
-        describe('"Name" and "Purchases" columns', () => {
-            let tr;
-            
             beforeEach(() => {
-                tr = trs[0];
+                h2s = document.querySelectorAll('body > article > h2');
+            });
+
+            it('should have such heading for each article', () => {
+                expect(h2s.length).toBe(2);
+            });
+
+            it('should be used for a "Background" article', () => {
+                const h2 = h2s[0];
+        
+                expect(h2.textContent.trim()).toBe('Background');
+            });
+
+            it('should be used for a "Personnel" article', () => {
+                const h2 = h2s[1];
+        
+                expect(h2.textContent.trim()).toBe('Personnel');
+            });
+        });
+
+        describe('<h3>', () => {
+            let h3s;
+
+            beforeEach(() => {
+                h3s = document.querySelectorAll('body section > h3');
+            });
+
+            it('should have such heading for each section', () => {
+                expect(h3s.length).toBe(4);
             });
 
             it.each([
-                ['Name', 0],
-                ['Purchases', 1]
-            ])('"%s" cell should have correct text', (expectedText, index) => {
-                const th = tr.cells[index];
-                const cellText = th.textContent.trim();
-                
-                expect(cellText).toBe(expectedText);
-            });
-            
-            it('"Name" cell should have correct rowspan', () => {
-                const th = tr.cells[0];
+                ['Prime crew', 0],
+                ['Backup crew', 1],
+                ['Flight directors', 2],
+                ['Citations', 3]
+            ])('should have "%s" heading in section', (expectedText, index) => {
+                h3s = document.querySelectorAll('body section > h3');
 
-                expect(th.getAttribute('rowspan')).toBe('2');
-            });
+                expect(h3s[index].textContent.trim()).toBe(expectedText);
+            })
+        });
+    });
 
-            it('"Purchases" cell should have correct rowspan', () => {
-                const th = tr.cells[1];
+    describe('Lists', () => {
+        describe('Prime crew list', () => {
+            it.each([
+                ['Commander - Neil A. Armstrong, Second and last spaceflight', 0],
+                ['Command Module Pilot - Michael Collins, Second and last spaceflight', 1],
+                ['Lunar Module Pilot - Edwin "Buzz" E. Aldrin Jr., Second and last spaceflight', 2],
+            ])('ordered list item should have correct text: "%s"', (expectedText, index) => {
+                const personnelArticle = document.querySelectorAll('body > article')[1];
+                const section = personnelArticle.querySelectorAll('section')[0];
+                const listItems = section.querySelectorAll('ol > li');
+                const li = listItems[index]
 
-                expect(th.getAttribute('colspan')).toBe('3');
+                expect(li.textContent.trim()).toBe(expectedText);
             });
         });
 
-        describe('"Price", "Amount (kilo)", "Sum" columns', () => {
-            let tr;
-            
-            beforeEach(() => {
-                tr = trs[1];
-            });
-
+        describe('Backup crew list', () => {
             it.each([
-                ['Price', 0],
-                ['Amount (kilo)', 1],
-                ['Sum', 2],
-            ])('"%s" cell should have correct text', (expectedText, index) => {
-                const th = tr.cells[index];
-                const cellText = th.textContent.trim();
-                
-                expect(cellText).toBe(expectedText);
+                ['Commander - James A. Lovell Jr.', 0],
+                ['Command Module Pilot - William A. Anders', 1],
+                ['Lunar Module Pilot - Fred W. Haise Jr.', 2],
+            ])('ordered list item should have correct text: "%s"', (expectedText, index) => {
+                const personnelArticle = document.querySelectorAll('body > article')[1];
+                const section = personnelArticle.querySelectorAll('section')[1];
+                const listItems = section.querySelectorAll('ol > li');
+                const li = listItems[index]
+
+                expect(li.textContent.trim()).toBe(expectedText);
+            });
+        });
+
+        describe('Flight directors list', () => {
+            it.each([
+                ['Clifford E. Charlesworth', 0],
+                ['Gerald D. Griffin', 1],
+                ['Gene Kranz', 2],
+                ['Glynn Lunney', 3],
+                ['Milton Windler', 4],
+            ])('unordered list item should have correct text: "%s"', (expectedText, index) => {
+                const personnelArticle = document.querySelectorAll('body > article')[1];
+                const section = personnelArticle.querySelectorAll('section')[2];
+                const listItems = section.querySelectorAll('ul > li');
+                const li = listItems[index]
+
+                expect(li.textContent.trim()).toBe(expectedText);
             });
         });
     });
 
-    describe('<tbody>', () => {
-        let tbody;
-        let trs;
-
-        beforeEach(() => {
-            tbody = document.querySelector('table > tbody');
-
-            trs = document.querySelectorAll('table > tbody > tr');
-        });
-
-        it('should be defined', () => {
-            expect(tbody).not.toBeNull();
-        });
-
-        it.each([
-            { name: 'Apple', value1: '20', value2: '2', value3: '40', rowIndex: 0 },
-            { name: 'Potato', value1: '10', value2: '3', value3: '30', rowIndex: 1 },
-            { name: 'Carrot', value1: '15', value2: '1', value3: '15', rowIndex: 2 },
-        ])('should have in the "$name" row: $value1, $value2, $value3', (params) => {
-            const {
-                name,
-                value1,
-                value2,
-                value3,
-                rowIndex,
-            } = params;
-            
-            const tr = trs[rowIndex];
-
-            expect(tr.cells[0].textContent.trim()).toBe(name);
-            expect(tr.cells[1].textContent.trim()).toBe(value1);
-            expect(tr.cells[2].textContent.trim()).toBe(value2);
-            expect(tr.cells[3].textContent.trim()).toBe(value3);
-        });
-
-        describe('<tfoot>', () => {
-            let tfoot;
+    describe('Abbreviations, quotations, times, and dates', () => {
+        describe('date and time', () => {
+            let time;
 
             beforeEach(() => {
-                tfoot = document.querySelector('table > tfoot');
-
-                tr = document.querySelector('table > tfoot > tr');
+                const p = document.querySelectorAll('body > p')[0];
+                time = p.querySelector('time');
             });
 
-            it('should have in the "Total" row: 3, 85', () => {
-                expect(tr.cells[0].textContent.trim()).toBe('Total');
-                expect(tr.cells[1].textContent.trim()).toBe('3');
-                expect(tr.cells[2].textContent.trim()).toBe('85');
+            it('should wrap date in the first paragraph', () => {
+                expect(time).not.toBeNull();
             });
 
-            it('"Total" cell should have correct colspan', () => {
-                const td = tr.cells[0];
+            it('should add dateime attribute to the tag', () => {
+                let attributeValue = time.getAttribute('datetime').trim();
+
+                expect(attributeValue).toBe('1969-07-20T20:17:00.000Z');
+            });
+        });
+
+        describe('Abbreviation', () => {
+            let abbr;
+
+            beforeEach(() => {
+                const p = document.querySelectorAll('body > p')[1];
+                abbr = p.querySelector('abbr');
+            });
+
+            it('should wrap the NASA', () => {
+                expect(abbr).not.toBeNull();
+            });
+
+            it('should add title to the tag', () => {
+                let attributeValue = abbr.getAttribute('title').trim();
+
+                expect(attributeValue)
+                    .toBe('The National Aeronautics and Space Administration');
+            });
+        });
+
+        describe('Quote', () => {
+            let blockQuote;
+
+            beforeEach(() => {
+                const p = document.querySelectorAll('body > article')[0];
+                blockQuote = p.querySelector('blockquote');
+            });
+
+            it('should wrap the quote with a correct tag', () => {
+                expect(blockQuote).not.toBeNull();
+            });
+
+            it('should have Kennedy\'s quote text inside', () => {
+                const p = blockQuote.querySelector('p');
+
+                expect(p.textContent.trim().startsWith('I believe that this nation'))
+                    .toBe(true);
+            });
+
+            it('should have correct text in a cite tag', () => {
+                const cite = blockQuote.querySelector('cite');
+
+                expect(cite.textContent.trim())
+                    .toBe('Kennedy\'s speech to Congress');
+            });
+        });
+    });
+
+    describe('Emphasized, italic, superscript text', () => {
+        let p;
+
+        beforeEach(() => {
+            p = document.querySelectorAll('body > p')[2];
+        });
+
+        it('should emphasize quote', () => {
+            const em = p.querySelector('em');
+
+            expect(em.textContent.trim())
+                .toBe('"one small step for [a] man, one giant leap for mankind."')
+        });
+
+        it('should make from a link a superscript', () => {
+            const a = p.querySelector('a');
+            const superscript = a.parentElement;
+
+            expect(superscript.tagName).toBe('SUP');
+        });
+
+        describe('italic', () => {
+            it.each([
+                [0],
+                [1],
+                [2]
+            ])('should have italized text chunk #%i with at list 3 symbols', (index) => {
+                const i = document.querySelectorAll('i')[index];
                 
-                expect(td.getAttribute('colspan')).toBe('2');
+                expect(i.textContent.trim().length >= 3).toBe(true);
             });
         });
     });
