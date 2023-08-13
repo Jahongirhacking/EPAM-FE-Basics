@@ -12,6 +12,8 @@ describe('HTML Forms and Interactive Elements', () => {
     let dom;
     let document;
 
+    let table;
+
     beforeEach(async () => {
         const filePath = path.join(__dirname, 'index.html');
         htmlString = await readTextFile(filePath);
@@ -20,7 +22,10 @@ describe('HTML Forms and Interactive Elements', () => {
         dom = new JSDOM(htmlString, {
             resources: 'usable'
         });
+
         document = dom.window.document;
+
+        table = document.querySelector('table');
     });
 
     // This test is mandatory for all the HTML related tasks
@@ -197,7 +202,6 @@ describe('HTML Forms and Interactive Elements', () => {
                 });
             });
         });
-    });
 
     describe('Participation details section', () => {
         let section;
@@ -241,6 +245,9 @@ describe('HTML Forms and Interactive Elements', () => {
             let input;
             let label;
 
+        describe('"Name" and "Purchases" columns', () => {
+            let tr;
+            
             beforeEach(() => {
                 p = section.querySelector('#uniform-color-p');
                 input = p.querySelector('input');
@@ -250,6 +257,9 @@ describe('HTML Forms and Interactive Elements', () => {
             it('<label> should exist', () => {
                 expect(label).not.toBeNull();
             });
+            
+            it('"Name" cell should have correct rowspan', () => {
+                const th = tr.cells[0];
 
             it('<input> should exist', () => {
                 expect(input).not.toBeNull();
@@ -270,7 +280,6 @@ describe('HTML Forms and Interactive Elements', () => {
             it('<input> should have correct type attribute', () => {
                 expect(input.type).toBe('color');
             });
-        });
 
         describe('<input> for Uniform color picking', () => {
             let p;
@@ -288,7 +297,8 @@ describe('HTML Forms and Interactive Elements', () => {
             it('<label> should exist', () => {
                 expect(label).not.toBeNull();
             });
-
+        });
+              
             it('<input> should exist', () => {
                 expect(input).not.toBeNull();
             });

@@ -6,6 +6,7 @@
 
 1.	This practical task is verified automatically with tests.
 2.	Please put all your `HTML` code in the `src/index.html` and `src/gallery.html` file. If you use any other file, we will not be able to verify it.
+3. Please, don't change the page structure, it may affect tests.
 
 ## Development
 
@@ -66,4 +67,3 @@ Please note that you should edit the `src/index.html` file. Your solution cannot
 	2. Add `<button>` for submitting this form.
 		- It should have `type="submit"`.
 		- Its text should be: `Send your data to NASA`.
-
