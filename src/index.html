@@ -1,65 +1,133 @@
 <!DOCTYPE html>
 <html lang="en-US" dir="ltr">
   <head>
-    <title>Structuring Tabular Data</title>
+    <title>NASA Yearlong Simulated Mars Mission application form</title>
     <meta charset="UTF-8">
     <link rel="icon" type="image/x-icon" href="images/favicon.ico">
-    <link rel="stylesheet" href="style.css">
   </head>
 
   <body>
-    <h1>Structuring Tabular Data</h1>
-    <table>
-      <caption>
-        Shop list for 25th of May
-      </caption>
-      <colgroup>
-        <col>
-        <col span="2">
-        <col>
-      </colgroup>
-      <thead>
-        <tr>
-          <th rowspan="2" scope="col">Name</th>
-          <th colspan="3" scope="colgroup">Purchases</th>
-        </tr>
-        <tr>
-          <th scope="col">Price</th>
-          <th scope="col">Amount (kilo)</th>
-          <th scope="col">Sum</th>
-        </tr>
-      </thead>
+    <h1>NASA Yearlong Simulated Mars Mission application form</h1>
 
-      <tbody>
-        <tr>
-          <td>Apple</td>
-          <td>20</td>
-          <td>2</td>
-          <td>40</td>
-        </tr>
+    <img src="./images/NASA_logo.png" alt="NASA Logo" width="200px">
 
-        <tr>
-          <td>Potato</td>
-          <td>10</td>
-          <td>3</td>
-          <td>30</td>
-        </tr>
+    <p>
+      Mars is calling! NASA is seeking applicants for participation as a crew
+      member during the first one-year analog mission in a habitat to simulate
+      life on a distant world.
+    </p>
 
-        <tr>
-          <td>Carrot</td>
-          <td>15</td>
-          <td>1</td>
-          <td>15</td>
-        </tr>
-      </tbody>
+    <p>
+      As NASA ventures farther into the cosmos, the astronaut experience will
+      change. In preparation for the real-life challenges of future missions to
+      Mars, NASA will study how highly motivated individuals respond under the
+      rigor of a long-duration, ground-based simulation.
+    </p>
 
-      <tfoot>
-        <tr>
-          <th colspan="2" scope="colgroup">Total</th>
-          <th scope="col">3</th>
-          <th scope="col">85</th>
-        </tr>
-      </tfoot>
-    </table>
+    <p>If you are interested, please fill the form bellow:</p>
+
+    <form
+      action=""
+      method="post"
+      enctype="multipart/form-data"
+      name="applicant-data"
+    >
+      <h2>NASA programm application form</h2>
+
+      <section id="contact-info">
+        <h3>Contact Info</h3>
+
+        <label>
+          Full Name:
+          <input name="full-name" type="text">
+        </label>
+
+        <label>
+          Address:
+          <input name="address" type="text">
+        </label>
+
+        <label>
+          Email:
+          <input name="email" type="email">
+        </label>
+      </section>
+
+      <section id="about">
+        <h3>About</h3>
+
+        <fieldset>
+          <legend>University Degree</legend>
+          <ul>
+            <li>
+              <label>
+                Military
+                <input name="degree" type="radio" value="military">
+              </label>
+            </li>
+
+            <li>
+              <label>
+                Technical
+                <input name="degree" type="radio" value="technical">
+              </label>
+            </li>
+
+            <li>
+              <label>
+                Student
+                <input name="degree" type="radio" value="student">
+              </label>
+            </li>
+          </ul>
+          <p id="bio-p">
+            <label for="bio">BIO</label>
+            <textarea id="bio" name="bio"></textarea>
+          </p>
+        </fieldset>
+      </section>
+
+      <section id="participation-details">
+        <h3>Participation details</h3>
+
+        <details>
+          <summary>More info</summary>
+          Please, provide information about your preferences. We don't guarantee them, but we will try.
+        </details>
+
+        <p id="uniform-color-p">
+          <label for="uniform-color">Uniform color</label>
+          <input type="color" name="uniform-color" id="uniform-color">
+        </p>
+
+        <p id="preferred-mission-role-p">
+          <label for="preferred-mission-role"
+            >Preferred Role in a mission</label
+          >
+          <input
+            list="preferred-mission-roles"
+            id="preferred-mission-role"
+            name="preferred-mission-role"
+            type="text">
+          <datalist id="preferred-mission-roles">
+            <option value="Pilot"></option>
+            <option value="Doctor"></option>
+            <option value="Scientist"></option>
+            <option value="Experimentator"></option>
+          </datalist>
+        </p>
+      </section>
+
+      <section id="agree-and-submit">
+        <p id="agree-part">
+          <label>
+            I agree on terms and conditions.
+            <input name="user-agree" type="checkbox">
+          </label>
+
+          <button type="submit">Send you data to NASA</button>
+        </p>
+      </section>
+    </form>
   </body>
 </html>
