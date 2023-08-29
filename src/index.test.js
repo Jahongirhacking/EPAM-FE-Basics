@@ -1,402 +1,231 @@
-const path = require('path');
-const { HtmlValidate } = require('html-validate');
+const path = require("path");
+const { HtmlValidate } = require("html-validate");
 
-const htmlValidateConfig = require('../test-utils/htmlValidateConfig.json');
-const { readTextFile } = require('../test-utils/readTextFile');
+const htmlValidateConfig = require("../test-utils/htmlValidateConfig.json");
+const { readTextFile } = require("../test-utils/readTextFile");
+const { waitBrowserLoadEvent } = require("../test-utils/waitBrowserEvent");
+const { trimSpaces } = require("../test-utils/trimSpaces");
+const {
+    getStyleDeclarationForSelector,
+} = require("../test-utils/getStyleDeclarationForSelector");
+const hexRgb = require("../test-utils/hex-rgb");
 
-const { JSDOM } = require('jsdom');
+const { JSDOM } = require("jsdom");
 
-describe('HTML Forms and Interactive Elements', () => {
+describe("Introduction to CSS basics", () => {
     let htmlString;
 
     let dom;
     let document;
 
-    let table;
-
     beforeEach(async () => {
-        const filePath = path.join(__dirname, 'index.html');
+        const filePath = path.join(__dirname, "index.html");
         htmlString = await readTextFile(filePath);
 
         // Create fake DOM
         dom = new JSDOM(htmlString, {
-            resources: 'usable'
+            resources: "usable",
         });
-
         document = dom.window.document;
 
-        table = document.querySelector('table');
+        // Replace CSS href with absolute paths, required for correct test running
+        const linksCSS = document.querySelectorAll('link[rel="stylesheet"]');
+        for (let linkCSS of linksCSS) {
+            const initialHref = linkCSS.getAttribute("href");
+            const linkAbsolutePath = path.join(__dirname, initialHref);
+            linkCSS.setAttribute("href", `file:///${linkAbsolutePath}`);
+        }
     });
 
     // This test is mandatory for all the HTML related tasks
-    it('html page should be valid', () => {
+    it("html page should be valid", () => {
         const htmlvalidate = new HtmlValidate();
-        const report = htmlvalidate.validateString(htmlString, htmlValidateConfig);
-        
+        const report = htmlvalidate.validateString(
+            htmlString,
+            htmlValidateConfig
+        );
+
         expect(report).toEqual(expect.objectContaining({ valid: true }));
     });
 
-    describe('Contact Info Section', () => {
-        let section;
-        let inputs;
-        let labels;
+    describe("Add existing styles", () => {
+        it("should add styles file", () => {
+            const rawDom = new JSDOM(htmlString);
+            const link = rawDom.window.document.querySelector(
+                'head > link[rel="stylesheet"]'
+            );
 
-        beforeEach(() => {
-            section = document.querySelector('body > form > #contact-info');
-            inputs = section.querySelectorAll('input');
-            labels = section.querySelectorAll('label');
+            expect(link.href).toBe("style.css");
         });
 
-        describe('Full name <input> and <label>', () => {
-            let input;
+        it("should have <style> tag as the first child of the <body>", async () => {
+            await waitBrowserLoadEvent(document);
 
-            beforeEach(() => {
-                input = inputs[0];
-                label = labels[0];
-            });
+            const style = document.body.children[0];
 
-            it('should be wrapped with label', () => {
-                expect(input.parentElement.tagName).toBe('LABEL');
-            });
-
-            it('should have correct name', () => {
-                expect(input.name.trim()).toBe('full-name');
-            });
-
-            it('<label> should have correct text', () => {
-                expect(label.textContent.trim())
-                    .toBe('Full Name:');
-            });
+            expect(style.tagName).toBe("STYLE");
         });
 
-        describe('Address <input> and <label>', () => {
-            let input;
+        it("<style> tag should have styles for <nav>", async () => {
+            await waitBrowserLoadEvent(document);
 
-            beforeEach(() => {
-                input = inputs[1];
-                label = labels[1];
-            });
+            const nav = document.querySelector("body > nav");
+            const navComputedStyle = dom.window.getComputedStyle(nav);
 
-            it('should be wrapped with label', () => {
-                expect(input.parentElement.tagName).toBe('LABEL');
-            });
-
-            it('should have correct name', () => {
-                expect(input.name.trim()).toBe('address');
-            });
-
-            it('<label> should have correct text', () => {
-                expect(label.textContent.trim())
-                    .toBe('Address:');
-            });
+            expect(navComputedStyle).toEqual(
+                expect.objectContaining({
+                    padding: "15px",
+                    border: "3px solid mediumseagreen",
+                    "border-radius": "3px",
+                })
+            );
         });
 
-        describe('Email <input> and <label>', () => {
-            let input;
+        it("should have inline style for the <h2> inside <nav>", async () => {
+            await waitBrowserLoadEvent(document);
 
-            beforeEach(() => {
-                input = inputs[2];
-                label = labels[2];
-            });
+            const h2 = document.querySelector("body > nav > h2");
+            const h2ComputedStyle = dom.window.getComputedStyle(h2);
 
-            it('should be wrapped with label', () => {
-                expect(input.parentElement.tagName).toBe('LABEL');
-            });
-
-            it('should have correct name', () => {
-                expect(input.name.trim()).toBe('email');
-            });
-
-            it('<label> should have correct text', () => {
-                expect(label.textContent.trim())
-                    .toBe('Email:');
-            });
-
-            it('should have email type', () => {
-                expect(input.type).toBe('email');
-            });
+            expect(h2ComputedStyle).toEqual(
+                expect.objectContaining({
+                    "text-transform": "uppercase",
+                    "text-decoration": "underline",
+                })
+            );
         });
     });
 
-    describe('About section', () => {
-        let section;
+    describe("Basic styling", () => {
+        describe("<body>", () => {
+            it("should have correct font family", async () => {
+                await waitBrowserLoadEvent(document);
 
-        beforeEach(() => {
-            section = document.querySelector('body > form > #about');
-        });
+                const body = document.body;
+                const bodyComputedStyle = dom.window.getComputedStyle(body);
 
-        describe('<fieldset>', () => {
-            let fieldset;
-            let inputs;
-
-            beforeEach(() => {
-                fieldset = section.querySelector('fieldset');
-                inputs = fieldset.querySelectorAll('ul > li > label > input');
-            });
-            
-            it('should exist', () => {
-                expect(fieldset).not.toBeNull();
+                expect(trimSpaces(bodyComputedStyle["font-family"])).toEqual(
+                    "Arial,Helvetica,sans-serif"
+                );
             });
 
-            it('should have correct <legend>', () => {
-                const legend = fieldset.querySelector('legend');
+            it("should have correct font size", async () => {
+                await waitBrowserLoadEvent(document);
 
-                expect(legend.textContent.trim()).toBe('University Degree');
-            });
+                const body = document.body;
+                const bodyComputedStyle = dom.window.getComputedStyle(body);
 
-            it('should have only one <legend>', () => {
-                const legends = fieldset.querySelectorAll('legend');
-
-                expect(legends.length).toBe(1);
-            });
-
-            describe('<input> elements', () => {
-                it.each([
-                    [0],
-                    [1],
-                    [2],
-                ])('#%d should have radio type', (index) => {
-                    let input = inputs[index];
-    
-                    expect(input.type).toBe('radio');
-                });
-    
-                it.each([
-                    [0, 'military'],
-                    [1, 'technical'],
-                    [2, 'student'],
-                ])('#%d should have correct value attribute', (index, value) => {
-                    let input = inputs[index];
-    
-                    expect(input.value.trim()).toBe(value);
-                });
-            });
-
-            describe('<textarea>', () => {
-                let textarea;
-                let label;
-
-                beforeEach(() => {
-                    textarea = section.querySelector('#bio-p > textarea');
-                    label = section.querySelector('#bio-p > label');
-                });
-
-                it('should exist', () => {
-                    expect(textarea).not.toBeNull();
-                });
-
-                it('should have correct name attribute', () => {
-                    expect(textarea.name).toBe('bio');
-                });
-
-                it('<label> should exist', () => {
-                    expect(label).not.toBeNull();
-                });
-
-                it('<label> should have correct text', () => {
-                    expect(label.textContent.trim()).toBe('BIO');
-                });
-
-                it('<label> should be linked to <textarea>', () => {
-                    expect(textarea.id).toBe(label.getAttribute('for'));
-                });
+                expect(bodyComputedStyle["font-size"]).toEqual("16px");
             });
         });
 
-    describe('Participation details section', () => {
-        let section;
+        describe("<h2>", () => {
+            it.each([[0], [1], [2], [3]])(
+                "should have correct styles for the #%i <h2>",
+                async (index) => {
+                    await waitBrowserLoadEvent(document);
+                    const h2s = [...document.querySelectorAll("main h2")];
+                    const h2 = h2s[index];
+                    const h2ComputedStyle = dom.window.getComputedStyle(h2);
 
-        beforeEach(() => {
-            section = document.querySelector('body > form > #participation-details');
+                    expect(h2ComputedStyle).toEqual(
+                        expect.objectContaining({
+                            "font-size": "1.5rem",
+                            color: hexRgb("#303030", { format: "css" }),
+                        })
+                    );
+                }
+            );
         });
 
-        describe('<details>', () => {
-            let details;
-            let summary;
+        it('should have correct styles for elements with class "quote"', async () => {
+            await waitBrowserLoadEvent(document);
 
-            beforeEach(() => {
-                details = section.querySelector('details');
-                summary = details.querySelector('summary');
-            });
+            const elem = document.querySelector(".quote");
+            const elemComputedStyle = dom.window.getComputedStyle(elem);
 
-            it('should exist', () => {
-                expect(details).not.toBeNull();
-            });
-            
-            it('<summary> should exist', () => {
-                expect(summary).not.toBeNull();
-            });
-
-            it('<summary> should have correct text', () => {
-                expect(summary.textContent.trim())
-                    .toBe('More info');
-            });
-
-            it('should have correct details text', () => {
-                const expectedText = 'Please, provide information about your preferences. We don\'t guarantee them, but we will try.';
-
-                expect(details.textContent.trim().endsWith(expectedText))
-                    .toBe(true);
-            });
+            expect(elemComputedStyle).toEqual(
+                expect.objectContaining({
+                    color: "darkslategrey",
+                    "font-weight": "bold",
+                    "font-style": "italic",
+                })
+            );
         });
 
-        describe('<input> for Uniform color picking', () => {
-            let p;
-            let input;
-            let label;
+        it('should have correct styles for element with id "main-image"', async () => {
+            await waitBrowserLoadEvent(document);
 
-        describe('"Name" and "Purchases" columns', () => {
-            let tr;
-            
-            beforeEach(() => {
-                p = section.querySelector('#uniform-color-p');
-                input = p.querySelector('input');
-                label = p.querySelector('label');
-            });
+            const elem = document.querySelector("#main-image");
+            const elemComputedStyle = dom.window.getComputedStyle(elem);
 
-            it('<label> should exist', () => {
-                expect(label).not.toBeNull();
-            });
-            
-            it('"Name" cell should have correct rowspan', () => {
-                const th = tr.cells[0];
-
-            it('<input> should exist', () => {
-                expect(input).not.toBeNull();
-            });
-
-            it('<label> should be linked to <input>', () => {
-                expect(input.id).toBe(label.getAttribute('for'));
-            });
-
-            it('<label> should have correct text', () => {
-                expect(label.textContent.trim()).toBe('Uniform color');
-            });
-
-            it('<input> should have correct name attribute', () => {
-                expect(input.name).toBe('uniform-color');
-            });
-
-            it('<input> should have correct type attribute', () => {
-                expect(input.type).toBe('color');
-            });
-
-        describe('<input> for Uniform color picking', () => {
-            let p;
-            let input;
-            let label;
-            let datalist;
-
-            beforeEach(() => {
-                p = section.querySelector('#preferred-mission-role-p');
-                input = p.querySelector('input');
-                label = p.querySelector('label');
-                datalist = p.querySelector('datalist');
-            });
-
-            it('<label> should exist', () => {
-                expect(label).not.toBeNull();
-            });
+            expect(elemComputedStyle).toEqual(
+                expect.objectContaining({
+                    border: "5px solid slateblue",
+                })
+            );
         });
-              
-            it('<input> should exist', () => {
-                expect(input).not.toBeNull();
-            });
 
-            it('<label> should be linked to <input>', () => {
-                expect(input.id).toBe(label.getAttribute('for'));
-            });
+        it("should have correct styles for all <ol>", async () => {
+            await waitBrowserLoadEvent(document);
 
-            it('<label> should have correct text', () => {
-                expect(label.textContent.trim())
-                    .toBe('Preferred Role in a mission');
-            });
+            const elem = document.querySelector("ol");
+            const elemComputedStyle = dom.window.getComputedStyle(elem);
 
-            it('<input> should have correct name attribute', () => {
-                expect(input.name).toBe('preferred-mission-role');
-            });
-
-            it('<input> should have correct type attribute', () => {
-                expect(input.type).toBe('text');
-            });
-
-            it('<datalist> should be linked to <input>', () => {
-                expect(datalist.getAttribute('id'))
-                    .toBe(input.getAttribute('list'));
-            });
-
-            it.each([
-                [0, 'Pilot'],
-                [1, 'Doctor'],
-                [2, 'Scientist'],
-                [3, 'Experimentator'],
-            ])('Option #%d should have value: %s', (index, expectedValue) => {
-                let options = datalist.querySelectorAll('option');
-                let option = options[index];
-
-                expect(option.value).toBe(expectedValue);
-            });
+            expect(elemComputedStyle).toEqual(
+                expect.objectContaining({
+                    "list-style-type": "upper-roman",
+                })
+            );
         });
     });
 
-    describe('Agree and submit section', () => {
-        let section;
+    describe("Links styling", () => {
+        let aIndexes = [[0], [1], [2], [3], [4]];
 
-        beforeEach(() => {
-            section = document.querySelector('body > form > #agree-and-submit');
+        it.each(aIndexes)(
+            "should have correct styles for a link #%i",
+            async (index) => {
+                await waitBrowserLoadEvent(document);
+
+                const link = document.querySelectorAll("a")[index];
+                const linkComputedStyle = dom.window.getComputedStyle(link);
+                expect(linkComputedStyle).toEqual(
+                    expect.objectContaining({
+                        color: "dodgerblue",
+                    })
+                );
+            }
+        );
+
+        it("should have correct styles for a visited links", async () => {
+            await waitBrowserLoadEvent(document);
+
+            const styleDeclaration = getStyleDeclarationForSelector(
+                "a:visited",
+                document.styleSheets
+            );
+
+            expect(styleDeclaration).toEqual(
+                expect.objectContaining({
+                    color: "violet",
+                })
+            );
         });
 
-        describe('<input> type checkbox', () => {
-            let input;
-            let label;
+        it("should have correct styles for a hovered links", async () => {
+            await waitBrowserLoadEvent(document);
 
-            beforeEach(() => {
-                input = section.querySelector('input');
-                label = section.querySelector('label');
-            });
+            const styleDeclaration = getStyleDeclarationForSelector(
+                "a:hover",
+                document.styleSheets
+            );
 
-            it('<label> should exist', () => {
-                expect(label).not.toBeNull();
-            });
-
-            it('<input> should exist', () => {
-                expect(input).not.toBeNull();
-            });
-
-            it('<input> should be wrapped with label', () => {
-                expect(input.parentElement.tagName)
-                    .toBe('LABEL');
-            });
-
-            it('<input> should have correct name attribute', () => {
-                expect(input.name).toBe('user-agree');
-            });
-
-            it('<input> should have correct type attribute', () => {
-                expect(input.type).toBe('checkbox');
-            });
-
-            it('<label> should have correct text', () => {
-                expect(label.textContent.trim())
-                    .toBe('I agree on terms and conditions.');
-            });
-        });
-
-        describe('submit <button>', () => {
-            let button;
-            
-            beforeEach(() => {
-                button = section.querySelector('button');
-            });
-
-            it('should have correct type attribute', () => {
-                expect(button.type).toBe('submit');
-            });
-
-            it('should have correct text', () => {
-                expect(button.textContent.trim())
-                    .toBe('Send you data to NASA');
-            });
+            expect(styleDeclaration).toEqual(
+                expect.objectContaining({
+                    color: "mediumseagreen",
+                })
+            );
         });
     });
 });
