@@ -1,48 +1,166 @@
 body {
   font-family: Arial, Helvetica, sans-serif;
-  font-size: 16px;
-  padding: 15px;
-  max-width: 900px;
-  margin: 0 auto;
+  margin: 0;
+}
+
+.contact::before {
+  content: "";
+  display: inline-block;
+  margin-right: 10px;
+  width: 1rem;
+  height: 1rem;
+  background-size: cover;
+}
+
+.main-quote {
+  color: #8c92ac;
+  font-size: 1.5rem;
+  font-style: italic;
+  margin: 0;
+  margin-bottom: 20px;
+}
+
+.main-header {
+  background-color: purple;
+  background-image: linear-gradient(
+    99.9deg,
+    rgba(27, 24, 31, 1) 21.2%,
+    rgba(50, 4, 89, 1) 84.8%
+  );
+  color: #fff;
+  padding: 2rem;
+}
+
+.avatar-figure {
+  background-color: rgb(47, 47, 91);
+  background-image: url("images/stars.jpg");
+  background-size: cover;
+  margin: 0;
+  padding: 1rem;
+}
+
+.avatar-figure > img {
+  border: 3px solid #fff;
+}
+
+.contacts {
+  color: #fff;
+  border: 3px solid #fff;
+  max-width: 50%;
+  padding: 1rem;
+}
+
+.contacts > li {
+  list-style: none;
+  display: inline-block;
+}
+
+a.contact:visited {
+  color: rgb(128, 128, 128);
+}
+
+a.contact:active {
+  color: rgb(151, 154, 170);
+}
+
+.contact-phone::before {
+  background-image: url(images/phone-call.svg);
+}
+
+.contact-inst::before {
+  background-image: url(images/instagram-logo.svg);
+}
+
+.contact-twitter::before {
+  background-image: url(images/twitter.svg);
 }
 
 h1 {
-  padding: 15px;
-  border: 5px solid dodgerblue;
-  border-radius: 3px;
+  border-bottom: 3px solid rgb(112, 128, 144);
+  padding-bottom: 30px;
 }
 
-h2 {
-  color: #303030;
-  font-size: 1.5rem;
+section {
+  padding: 2rem;
 }
 
-p {
-  font-size: 18px;
+section.summary {
+  text-shadow: 1px 1px 2px pink;
 }
 
-.quote {
-  color: darkslategrey;
+.space {
+  background-image: url(images/rocket_big.png), url(images/space.jpg);
+  background-position: center, bottom center;
+  background-repeat: no-repeat, no-repeat;
+  border-radius: 50%;
+  float: left;
+  height: 8rem;
+  width: 8rem;
+  margin-right: 15px;
+}
+
+.work-experience {
+  margin-top: 2rem;
+}
+
+table {
+  border: 3px solid purple;
+  border-collapse: collapse;
+  table-layout: fixed;
+  width: 100%;
+}
+
+.work-experience-years-col {
+  width: 15%;
+}
+
+.work-experience-job-title-col {
+  width: 20%;
+}
+
+.work-experience-comment-col {
+  width: 65%;
+}
+
+th {
+  letter-spacing: 2px;
+  padding: 20px;
+  text-align: left;
+}
+
+td {
+  letter-spacing: 1px;
+  padding: 20px;
+  text-align: left;
+}
+
+tfoot th {
+  text-align: right;
+}
+
+thead,
+tfoot {
+  background-image: url(images/leopardskin.jpg);
+  color: #fff;
+  text-shadow: 1px 1px 1px black;
+}
+
+caption {
+  caption-side: bottom;
+  color: #666;
   font-style: italic;
-  font-weight: bold;
+  padding: 20px;
+  text-align: right;
+  letter-spacing: 1px;
 }
 
-#main-image {
-  border: 5px solid slateblue;
-}
-
-ol {
-  list-style-type: upper-roman;
-}
-
-a {
-  color: dodgerblue;
-}
-
-a:visited {
-  color: violet;
-}
-
-a:hover {
-  color: mediumseagreen;
+.main-footer {
+  background-color: purple;
+  background-image: linear-gradient(
+    99.9deg,
+    rgba(27, 24, 31, 1) 21.2%,
+    rgba(50, 4, 89, 1) 84.8%
+  );
+  color: #fff;
+  padding: 2rem;
 }
