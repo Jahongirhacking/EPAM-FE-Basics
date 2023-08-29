@@ -1,133 +1,149 @@
 <!DOCTYPE html>
 <html lang="en-US" dir="ltr">
   <head>
-    <title>NASA Yearlong Simulated Mars Mission application form</title>
+    <title>Space News</title>
+    <!-- prettier-ignore -->
     <meta charset="UTF-8">
+    <!-- prettier-ignore -->
     <link rel="icon" type="image/x-icon" href="images/favicon.ico">
+    <!-- prettier-ignore -->
+    <link rel="stylesheet" href="style.css">
   </head>
 
   <body>
-    <h1>NASA Yearlong Simulated Mars Mission application form</h1>
+    <header id="main-header">
+      <h1 class="main-heading">Space news</h1>
 
-    <img src="./images/NASA_logo.png" alt="NASA Logo" width="200px">
+      <nav class="main-navigation">
+        <ul class="menu-list" role="menu">
+          <li role="menuitem">
+            <a target="_blank" href="https://www.space.com">Tech</a>
+          </li>
 
-    <p>
-      Mars is calling! NASA is seeking applicants for participation as a crew
-      member during the first one-year analog mission in a habitat to simulate
-      life on a distant world.
-    </p>
+          <li role="menuitem" class="science-astronomy">
+            <a target="_blank" href="https://www.space.com/tech-robots"
+              >Astronomy</a
+            >
+          </li>
 
-    <p>
-      As NASA ventures farther into the cosmos, the astronaut experience will
-      change. In preparation for the real-life challenges of future missions to
-      Mars, NASA will study how highly motivated individuals respond under the
-      rigor of a long-duration, ground-based simulation.
-    </p>
+          <li role="menuitem" class="spaceflight">
+            <a target="_blank" href="https://www.space.com/spaceflight"
+              >Spaceflights</a
+            >
+          </li>
+        </ul>
+      </nav>
+    </header>
 
-    <p>If you are interested, please fill the form bellow:</p>
+    <main>
+      <section class="tech">
+        <header>
+          <h2>Tech</h2>
+          <a href="https://www.space.com/tech-robots">More Tech News</a>
+        </header>
 
-    <form
-      action=""
-      method="post"
-      enctype="multipart/form-data"
-      name="applicant-data"
-    >
-      <h2>NASA programm application form</h2>
+        <ol class="news-list">
+          <li>
+            <h3>
+              Venus Aerospace unveils its new dart-like Mach 9 hypersonic plane
+              design
+            </h3>
+            <p>
+              Venus Aerospace has recently released design images of its new
+              Mach 9 aircraft concept.
+            </p>
+          </li>
 
-      <section id="contact-info">
-        <h3>Contact Info</h3>
+          <li>
+            <h3>See the Evolution of SpaceX's Rockets in Pictures</h3>
+            <p>First Stop: Meet the Falcon 1</p>
+          </li>
 
-        <label>
-          Full Name:
-          <input name="full-name" type="text">
-        </label>
-
-        <label>
-          Address:
-          <input name="address" type="text">
-        </label>
-
-        <label>
-          Email:
-          <input name="email" type="email">
-        </label>
+          <li>
+            <h3>
+              LightSail 2 celebrates 3rd space birthday as end of mission
+              approaches
+            </h3>
+            <p>
+              LightSail 2 is now marking three years of spaceflight, but is
+              unlikely to celebrate a fourth anniversary.
+            </p>
+          </li>
+        </ol>
       </section>
 
-      <section id="about">
-        <h3>About</h3>
-
-        <fieldset>
-          <legend>University Degree</legend>
-          <ul>
-            <li>
-              <label>
-                Military
-                <input name="degree" type="radio" value="military">
-              </label>
-            </li>
-
-            <li>
-              <label>
-                Technical
-                <input name="degree" type="radio" value="technical">
-              </label>
-            </li>
-
-            <li>
-              <label>
-                Student
-                <input name="degree" type="radio" value="student">
-              </label>
-            </li>
-          </ul>
-          <p id="bio-p">
-            <label for="bio">BIO</label>
-            <textarea id="bio" name="bio"></textarea>
-          </p>
-        </fieldset>
-      </section>
-
-      <section id="participation-details">
-        <h3>Participation details</h3>
-
-        <details>
-          <summary>More info</summary>
-          Please, provide information about your preferences. We don't guarantee them, but we will try.
-        </details>
-
-        <p id="uniform-color-p">
-          <label for="uniform-color">Uniform color</label>
-          <input type="color" name="uniform-color" id="uniform-color">
-        </p>
-
-        <p id="preferred-mission-role-p">
-          <label for="preferred-mission-role"
-            >Preferred Role in a mission</label
+      <section class="spaceflight">
+        <header>
+          <h2>Spaceflight</h2>
+          <a target="_blank" href="https://www.space.com/spaceflight"
+            >Spaceflight</a
           >
-          <input
-            list="preferred-mission-roles"
-            id="preferred-mission-role"
-            name="preferred-mission-role"
-            type="text">
-          <datalist id="preferred-mission-roles">
-            <option value="Pilot"></option>
-            <option value="Doctor"></option>
-            <option value="Scientist"></option>
-            <option value="Experimentator"></option>
-          </datalist>
-        </p>
+        </header>
+
+        <ol class="news-list">
+          <li>
+            <h3>What’s it Like to Become a NASA Astronaut?</h3>
+            <p>10 Surprising Facts</p>
+          </li>
+
+          <li>
+            <h3>
+              Private Cygnus cargo ship departs space station for a fiery death
+              in Earth's atmosphere
+            </h3>
+            <p>
+              Northop Grumman's robotic Cygnus freighter is scheduled to undock
+              from the orbiting lab at 6:05 a.m. EDT (1005) Tuesday. Watch it
+              live here at Space.com, courtesy of NASA.
+            </p>
+          </li>
+        </ol>
       </section>
 
-      <section id="agree-and-submit">
-        <p id="agree-part">
-          <label>
-            I agree on terms and conditions.
-            <input name="user-agree" type="checkbox">
-          </label>
+      <section class="science-astronomy">
+        <header>
+          <h2>Science &amp; Astronomy</h2>
+          <a target="_blank" href="https://www.space.com/science-astronomy"
+            >More Science &amp; Astronomy News</a
+          >
+        </header>
 
-          <button type="submit">Send you data to NASA</button>
-        </p>
+        <ol class="news-list">
+          <li>
+            <h3>White dwarf seen to survive its own supernova explosion</h3>
+            <p>
+              Astronomers have spotted a white dwarf that miraculously survived
+              its own thermonuclear detonation, raising questions over how and
+              why these stars create supernovas.
+            </p>
+          </li>
+
+          <li>
+            <h3>See the Evolution of SpaceX's Rockets in Pictures</h3>
+            <p>First Stop: Meet the Falcon 1</p>
+          </li>
+
+          <li>
+            <h3>
+              James Webb Space Telescope scientists prepare for 1st operational
+              images: Listen in Wednesday
+            </h3>
+            <p>
+              Join in for free Wednesday (June 29) as NASA celebrates the
+              forthcoming end of commissioning for its $10 billion James Webb
+              Space Telescope.
+            </p>
+          </li>
+        </ol>
       </section>
-    </form>
+    </main>
+
+    <footer class="main-footer">
+      <p>© Space News Copyright 2000</p>
+
+      <p>
+        <a href="mailto:info@space.com">Contact Us</a>
+      </p>
+    </footer>
   </body>
 </html>

@@ -1,15 +1,80 @@
-table {
-    border: 1px solid #000;
-    border-collapse: collapse;
+body {
+  font-family: Arial, Helvetica, sans-serif;
 }
 
-td, th {
-    border: 1px solid #000;
-    padding-right: 50px;
-    padding-left: 10PX;
-    text-align: left;
+#main-header {
+  padding: 10px;
+  border: 3px solid darkblue;
 }
 
-tfoot td {
-    font-weight: bold;
+.main-heading {
+  font-style: italic;
+  text-decoration: underline dotted;
 }
+
+section {
+  padding: 10px;
+  margin-top: 10px;
+}
+
+section.tech {
+  border: 3px solid darkolivegreen;
+}
+
+section.spaceflight {
+  border: 3px solid darkmagenta;
+}
+
+section.science-astronomy {
+  border: 3px solid darkcyan;
+}
+
+.tech h2 {
+  color: darkgrey;
+}
+
+header > h2 {
+  padding-left: 10px;
+  border-left: 3px solid darksalmon;
+}
+
+h1 + nav {
+  border-left: 4px solid;
+}
+
+#main-header ~ .main-footer {
+  padding: 10px;
+  margin-top: 10px;
+  border: 3px solid darkkhaki;
+}
+
+.main-navigation > ul {
+  list-style: none;
+  padding-left: 15px;
+}
+
+ol > li:first-child {
+  border-bottom: 3px solid darkmagenta;
+}
+
+ol > li:last-child {
+  border-top: 3px solid darkturquoise;
+}
+
+.main-footer a:hover {
+  color: yellowgreen;
+}
+
+a:focus {
+  background-color: yellow;
+}
+
+/* prettier-ignore */
+.tech h2::before {
+  content: '🤖';
+}
+
+/* prettier-ignore */
+.spaceflight h2::after {
+    content: '🚀';
+  }

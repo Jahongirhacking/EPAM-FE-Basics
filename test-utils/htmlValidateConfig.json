@@ -3,6 +3,6 @@
     "rules": {
         "missing-doctype": "error",
         "no-trailing-whitespace": "off",
-        "no-implicit-close": "off"
+        "no-inline-style": "off"
     }
 }

@@ -3,16 +3,18 @@ const { HtmlValidate } = require('html-validate');
 
 const htmlValidateConfig = require('../test-utils/htmlValidateConfig.json');
 const { readTextFile } = require('../test-utils/readTextFile');
+const { waitBrowserLoadEvent } = require('../test-utils/waitBrowserEvent');
+const { cipheredTestData } = require('../test-utils/cipheredTestData');
+const { getStyleDeclarationForSelector } = require('../test-utils/getStyleDeclarationForSelector')
 
 const { JSDOM } = require('jsdom');
+const cipher = require('base-64');
 
-describe('HTML Forms and Interactive Elements', () => {
+describe('CSS selectors', () => {
     let htmlString;
 
     let dom;
     let document;
-
-    let table;
 
     beforeEach(async () => {
         const filePath = path.join(__dirname, 'index.html');
@@ -22,10 +24,15 @@ describe('HTML Forms and Interactive Elements', () => {
         dom = new JSDOM(htmlString, {
             resources: 'usable'
         });
-
         document = dom.window.document;
 
-        table = document.querySelector('table');
+        // Replace CSS href with absolute paths
+        const linksCSS = document.querySelectorAll('link[rel="stylesheet"]');
+        for (let linkCSS of linksCSS) {
+            const initialHref = linkCSS.getAttribute('href');
+            const linkAbsolutePath = path.join(__dirname, initialHref);
+            linkCSS.setAttribute('href', `file:///${linkAbsolutePath}`);
+        }
     });
 
     // This test is mandatory for all the HTML related tasks
@@ -36,366 +43,520 @@ describe('HTML Forms and Interactive Elements', () => {
         expect(report).toEqual(expect.objectContaining({ valid: true }));
     });
 
-    describe('Contact Info Section', () => {
-        let section;
-        let inputs;
-        let labels;
-
-        beforeEach(() => {
-            section = document.querySelector('body > form > #contact-info');
-            inputs = section.querySelectorAll('input');
-            labels = section.querySelectorAll('label');
-        });
-
-        describe('Full name <input> and <label>', () => {
-            let input;
+    describe('Basic selectors', () => {
+        describe('<body>', () => {
+            let expectedStyle;
 
             beforeEach(() => {
-                input = inputs[0];
-                label = labels[0];
+                expectedStyle = {
+                    'font-family': 'Arial, Helvetica, sans-serif'
+                };
             });
 
-            it('should be wrapped with label', () => {
-                expect(input.parentElement.tagName).toBe('LABEL');
+            it('should add selector', async () => {
+                await waitBrowserLoadEvent(document);
+                
+                const selector = cipher.decode(cipheredTestData['<body>']);
+                const styleDeclaration = getStyleDeclarationForSelector(selector, document.styleSheets);
+
+                expect(styleDeclaration)
+                    .toEqual(expect.objectContaining(expectedStyle));
             });
 
-            it('should have correct name', () => {
-                expect(input.name.trim()).toBe('full-name');
-            });
-
-            it('<label> should have correct text', () => {
-                expect(label.textContent.trim())
-                    .toBe('Full Name:');
+            it('styles should apply', async () => {
+                await waitBrowserLoadEvent(document);
+                
+                const computedStyle =  dom.window.getComputedStyle(document.body);
+    
+                expect(computedStyle)
+                    .toEqual(expect.objectContaining(expectedStyle));
             });
         });
 
-        describe('Address <input> and <label>', () => {
-            let input;
+        describe('Main Header', () => {
+            let expectedStyle;
 
             beforeEach(() => {
-                input = inputs[1];
-                label = labels[1];
+                expectedStyle = {
+                    'padding': '10px',
+                    'border': '3px solid darkblue',
+                };
             });
 
-            it('should be wrapped with label', () => {
-                expect(input.parentElement.tagName).toBe('LABEL');
+            it('should add selector', async () => {
+                await waitBrowserLoadEvent(document);
+                
+                const selector = cipher.decode(cipheredTestData['main-header']);
+                const styleDeclaration = getStyleDeclarationForSelector(selector, document.styleSheets);
+
+                expect(styleDeclaration)
+                    .toEqual(expect.objectContaining(expectedStyle));
             });
 
-            it('should have correct name', () => {
-                expect(input.name.trim()).toBe('address');
-            });
-
-            it('<label> should have correct text', () => {
-                expect(label.textContent.trim())
-                    .toBe('Address:');
+            it('styles should apply', async () => {
+                await waitBrowserLoadEvent(document);
+                
+                const element = document.querySelector('header')
+                const computedStyle =  dom.window.getComputedStyle(element);
+    
+                expect(computedStyle)
+                    .toEqual(expect.objectContaining(expectedStyle));
             });
         });
 
-        describe('Email <input> and <label>', () => {
-            let input;
+        describe('Main Heading', () => {
+            let expectedStyle;
 
             beforeEach(() => {
-                input = inputs[2];
-                label = labels[2];
+                expectedStyle = {
+                    'font-style': 'italic',
+                    'text-decoration': 'underline dotted',
+                };
             });
 
-            it('should be wrapped with label', () => {
-                expect(input.parentElement.tagName).toBe('LABEL');
+            it('should add selector', async () => {
+                await waitBrowserLoadEvent(document);
+                
+                const selector = cipher.decode(cipheredTestData['main-heading']);
+                const styleDeclaration = getStyleDeclarationForSelector(selector, document.styleSheets);
+
+                expect(styleDeclaration)
+                    .toEqual(expect.objectContaining(expectedStyle));
             });
 
-            it('should have correct name', () => {
-                expect(input.name.trim()).toBe('email');
+            it('styles should apply', async () => {
+                await waitBrowserLoadEvent(document);
+                
+                const element = document.querySelector('h1')
+                const computedStyle =  dom.window.getComputedStyle(element);
+    
+                expect(computedStyle)
+                    .toEqual(expect.objectContaining(expectedStyle));
+            });
+        });
+
+        describe('All Sections', () => {
+            let expectedStyle;
+
+            beforeEach(() => {
+                expectedStyle = {
+                    'padding': '10px',
+                    'margin-top': '10px',
+                };
             });
 
-            it('<label> should have correct text', () => {
-                expect(label.textContent.trim())
-                    .toBe('Email:');
+            it('should add selector', async () => {
+                await waitBrowserLoadEvent(document);
+                
+                const selector = cipher.decode(cipheredTestData['all-sections']);
+                const styleDeclaration = getStyleDeclarationForSelector(selector, document.styleSheets);
+
+                expect(styleDeclaration)
+                    .toEqual(expect.objectContaining(expectedStyle));
             });
 
-            it('should have email type', () => {
-                expect(input.type).toBe('email');
+            it('styles should apply', async () => {
+                await waitBrowserLoadEvent(document);
+                
+                const main = document.querySelector('main')
+                const element = main.firstElementChild;
+                const computedStyle =  dom.window.getComputedStyle(element);
+    
+                expect(computedStyle)
+                    .toEqual(expect.objectContaining(expectedStyle));
             });
         });
     });
 
-    describe('About section', () => {
-        let section;
-
-        beforeEach(() => {
-            section = document.querySelector('body > form > #about');
-        });
-
-        describe('<fieldset>', () => {
-            let fieldset;
-            let inputs;
+    describe('Combinators selectors', () => {
+        describe('<section> element with class name tech', () => {
+            let expectedStyle;
 
             beforeEach(() => {
-                fieldset = section.querySelector('fieldset');
-                inputs = fieldset.querySelectorAll('ul > li > label > input');
-            });
-            
-            it('should exist', () => {
-                expect(fieldset).not.toBeNull();
+                expectedStyle = {
+                    'border': '3px solid darkolivegreen',
+                };
             });
 
-            it('should have correct <legend>', () => {
-                const legend = fieldset.querySelector('legend');
+            it('should add selector', async () => {
+                await waitBrowserLoadEvent(document);
+                
+                const selector = cipher.decode(cipheredTestData['section-tech']);
+                const styleDeclaration = getStyleDeclarationForSelector(selector, document.styleSheets);
 
-                expect(legend.textContent.trim()).toBe('University Degree');
+                expect(styleDeclaration)
+                    .toEqual(expect.objectContaining(expectedStyle));
             });
 
-            it('should have only one <legend>', () => {
-                const legends = fieldset.querySelectorAll('legend');
-
-                expect(legends.length).toBe(1);
-            });
-
-            describe('<input> elements', () => {
-                it.each([
-                    [0],
-                    [1],
-                    [2],
-                ])('#%d should have radio type', (index) => {
-                    let input = inputs[index];
+            it('styles should apply', async () => {
+                await waitBrowserLoadEvent(document);
+                
+                const main = document.querySelector('main');
+                const element = main.children[0];
+                const computedStyle =  dom.window.getComputedStyle(element);
     
-                    expect(input.type).toBe('radio');
-                });
+                expect(computedStyle)
+                    .toEqual(expect.objectContaining(expectedStyle));
+            });
+        });
+
+        describe('<section> element with class name spaceflight', () => {
+            let expectedStyle;
+
+            beforeEach(() => {
+                expectedStyle = {
+                    'border': '3px solid darkmagenta',
+                };
+            });
+
+            it('should add selector', async () => {
+                await waitBrowserLoadEvent(document);
+                
+                const selector = cipher.decode(cipheredTestData['section-spaceflight']);
+                const styleDeclaration = getStyleDeclarationForSelector(selector, document.styleSheets);
+
+                expect(styleDeclaration)
+                    .toEqual(expect.objectContaining(expectedStyle));
+            });
+
+            it('styles should apply', async () => {
+                await waitBrowserLoadEvent(document);
+                
+                const main = document.querySelector('main');
+                const element = main.children[1];
+                const computedStyle =  dom.window.getComputedStyle(element);
     
-                it.each([
-                    [0, 'military'],
-                    [1, 'technical'],
-                    [2, 'student'],
-                ])('#%d should have correct value attribute', (index, value) => {
-                    let input = inputs[index];
+                expect(computedStyle)
+                    .toEqual(expect.objectContaining(expectedStyle));
+            });
+        });
+
+        describe('<section> element with class name science-astronomy', () => {
+            let expectedStyle;
+
+            beforeEach(() => {
+                expectedStyle = {
+                    'border': '3px solid darkcyan',
+                };
+            });
+
+            it('should add selector', async () => {
+                await waitBrowserLoadEvent(document);
+                
+                const selector = cipher.decode(cipheredTestData['section-science-astronomy']);
+                const styleDeclaration = getStyleDeclarationForSelector(selector, document.styleSheets);
+
+                expect(styleDeclaration)
+                    .toEqual(expect.objectContaining(expectedStyle));
+            });
+
+            it('styles should apply', async () => {
+                await waitBrowserLoadEvent(document);
+                
+                const main = document.querySelector('main');
+                const element = main.children[2];
+                const computedStyle =  dom.window.getComputedStyle(element);
     
-                    expect(input.value.trim()).toBe(value);
-                });
-            });
-
-            describe('<textarea>', () => {
-                let textarea;
-                let label;
-
-                beforeEach(() => {
-                    textarea = section.querySelector('#bio-p > textarea');
-                    label = section.querySelector('#bio-p > label');
-                });
-
-                it('should exist', () => {
-                    expect(textarea).not.toBeNull();
-                });
-
-                it('should have correct name attribute', () => {
-                    expect(textarea.name).toBe('bio');
-                });
-
-                it('<label> should exist', () => {
-                    expect(label).not.toBeNull();
-                });
-
-                it('<label> should have correct text', () => {
-                    expect(label.textContent.trim()).toBe('BIO');
-                });
-
-                it('<label> should be linked to <textarea>', () => {
-                    expect(textarea.id).toBe(label.getAttribute('for'));
-                });
+                expect(computedStyle)
+                    .toEqual(expect.objectContaining(expectedStyle));
             });
         });
-
-    describe('Participation details section', () => {
-        let section;
-
-        beforeEach(() => {
-            section = document.querySelector('body > form > #participation-details');
-        });
-
-        describe('<details>', () => {
-            let details;
-            let summary;
+        
+        describe('<h2> descendant of element with class tech', () => {
+            let expectedStyle;
+            let selector;
 
             beforeEach(() => {
-                details = section.querySelector('details');
-                summary = details.querySelector('summary');
+                expectedStyle = {
+                    'color': 'darkgrey',
+                };
+
+                selector = cipher.decode(cipheredTestData['h2-tech']);
             });
 
-            it('should exist', () => {
-                expect(details).not.toBeNull();
-            });
-            
-            it('<summary> should exist', () => {
-                expect(summary).not.toBeNull();
-            });
+            it('should add selector', async () => {
+                await waitBrowserLoadEvent(document);
+                
+                const styleDeclaration = getStyleDeclarationForSelector(selector, document.styleSheets);
 
-            it('<summary> should have correct text', () => {
-                expect(summary.textContent.trim())
-                    .toBe('More info');
+                expect(styleDeclaration)
+                    .toEqual(expect.objectContaining(expectedStyle));
             });
 
-            it('should have correct details text', () => {
-                const expectedText = 'Please, provide information about your preferences. We don\'t guarantee them, but we will try.';
+            it('styles should apply', async () => {
+                await waitBrowserLoadEvent(document);
+    
+                const element = document.querySelector(selector);
+                const computedStyle =  dom.window.getComputedStyle(element);
+    
+                expect(computedStyle)
+                    .toEqual(expect.objectContaining(expectedStyle));
+            });
+        });
 
-                expect(details.textContent.trim().endsWith(expectedText))
-                    .toBe(true);
+        describe('<h2> element which is a direct child of a <header> element', () => {
+            let expectedStyle;
+            let selector;
+
+            beforeEach(() => {
+                expectedStyle = {
+                    'padding-left': '10px',
+                    'border-left': '3px solid darksalmon',
+                };
+
+                selector = cipher.decode(cipheredTestData['h2-header']);
+            });
+
+            it('should add selector', async () => {
+                await waitBrowserLoadEvent(document);
+                
+                const styleDeclaration = getStyleDeclarationForSelector(selector, document.styleSheets);
+
+                expect(styleDeclaration)
+                    .toEqual(expect.objectContaining(expectedStyle));
+            });
+
+            it('styles should apply', async () => {
+                await waitBrowserLoadEvent(document);
+    
+                const element = document.querySelector(selector);
+                const computedStyle =  dom.window.getComputedStyle(element);
+    
+                expect(computedStyle)
+                    .toEqual(expect.objectContaining(expectedStyle));
             });
         });
 
-        describe('<input> for Uniform color picking', () => {
-            let p;
-            let input;
-            let label;
-
-        describe('"Name" and "Purchases" columns', () => {
-            let tr;
-            
-            beforeEach(() => {
-                p = section.querySelector('#uniform-color-p');
-                input = p.querySelector('input');
-                label = p.querySelector('label');
-            });
-
-            it('<label> should exist', () => {
-                expect(label).not.toBeNull();
-            });
-            
-            it('"Name" cell should have correct rowspan', () => {
-                const th = tr.cells[0];
-
-            it('<input> should exist', () => {
-                expect(input).not.toBeNull();
-            });
-
-            it('<label> should be linked to <input>', () => {
-                expect(input.id).toBe(label.getAttribute('for'));
-            });
-
-            it('<label> should have correct text', () => {
-                expect(label.textContent.trim()).toBe('Uniform color');
-            });
-
-            it('<input> should have correct name attribute', () => {
-                expect(input.name).toBe('uniform-color');
-            });
-
-            it('<input> should have correct type attribute', () => {
-                expect(input.type).toBe('color');
-            });
-
-        describe('<input> for Uniform color picking', () => {
-            let p;
-            let input;
-            let label;
-            let datalist;
+        describe('<nav> element which immediately follows <h1> element', () => {
+            let expectedStyle;
+            let selector;
 
             beforeEach(() => {
-                p = section.querySelector('#preferred-mission-role-p');
-                input = p.querySelector('input');
-                label = p.querySelector('label');
-                datalist = p.querySelector('datalist');
+                expectedStyle = {
+                    'border-left': '4px solid',
+                };
+
+                selector = cipher.decode(cipheredTestData['nav-h1']);
             });
 
-            it('<label> should exist', () => {
-                expect(label).not.toBeNull();
+            it('should add selector', async () => {
+                await waitBrowserLoadEvent(document);
+                
+                const styleDeclaration = getStyleDeclarationForSelector(selector, document.styleSheets);
+
+                expect(styleDeclaration)
+                    .toEqual(expect.objectContaining(expectedStyle));
+            });
+
+            it('styles should apply', async () => {
+                await waitBrowserLoadEvent(document);
+    
+                const element = document.querySelector(selector);
+                const computedStyle =  dom.window.getComputedStyle(element);
+    
+                expect(computedStyle)
+                    .toEqual(expect.objectContaining(expectedStyle));
             });
         });
-              
-            it('<input> should exist', () => {
-                expect(input).not.toBeNull();
+
+        describe('main-footer which follows on any level an element with id main-header', () => {
+            let expectedStyle;
+            let selector;
+
+            beforeEach(() => {
+                expectedStyle = {
+                    'padding': '10px',
+                    'margin-top': '10px',
+                    'border': '3px solid darkkhaki',
+                };
+
+                selector = cipher.decode(cipheredTestData['main-footer-main-header']);
             });
 
-            it('<label> should be linked to <input>', () => {
-                expect(input.id).toBe(label.getAttribute('for'));
+            it('should add selector', async () => {
+                await waitBrowserLoadEvent(document);
+                
+                const styleDeclaration = getStyleDeclarationForSelector(selector, document.styleSheets);
+
+                expect(styleDeclaration)
+                    .toEqual(expect.objectContaining(expectedStyle));
             });
 
-            it('<label> should have correct text', () => {
-                expect(label.textContent.trim())
-                    .toBe('Preferred Role in a mission');
+            it('styles should apply', async () => {
+                await waitBrowserLoadEvent(document);
+    
+                const element = document.querySelector(selector);
+                const computedStyle =  dom.window.getComputedStyle(element);
+    
+                expect(computedStyle)
+                    .toEqual(expect.objectContaining(expectedStyle));
+            });
+        });
+
+        describe('main-footer which follows on any level an element with id main-header', () => {
+            let expectedStyle;
+            let selector;
+
+            beforeEach(() => {
+                expectedStyle = {
+                    'list-style': 'none',
+                    'padding-left': '15px',
+                };
+
+                selector = cipher.decode(cipheredTestData['ul-main-navigation']);
             });
 
-            it('<input> should have correct name attribute', () => {
-                expect(input.name).toBe('preferred-mission-role');
+            it('should add selector', async () => {
+                await waitBrowserLoadEvent(document);
+                
+                const styleDeclaration = getStyleDeclarationForSelector(selector, document.styleSheets);
+
+                expect(styleDeclaration)
+                    .toEqual(expect.objectContaining(expectedStyle));
             });
 
-            it('<input> should have correct type attribute', () => {
-                expect(input.type).toBe('text');
-            });
-
-            it('<datalist> should be linked to <input>', () => {
-                expect(datalist.getAttribute('id'))
-                    .toBe(input.getAttribute('list'));
-            });
-
-            it.each([
-                [0, 'Pilot'],
-                [1, 'Doctor'],
-                [2, 'Scientist'],
-                [3, 'Experimentator'],
-            ])('Option #%d should have value: %s', (index, expectedValue) => {
-                let options = datalist.querySelectorAll('option');
-                let option = options[index];
-
-                expect(option.value).toBe(expectedValue);
+            it('styles should apply', async () => {
+                await waitBrowserLoadEvent(document);
+    
+                const element = document.querySelector(selector);
+                const computedStyle =  dom.window.getComputedStyle(element);
+    
+                expect(computedStyle)
+                    .toEqual(expect.objectContaining(expectedStyle));
             });
         });
     });
 
-    describe('Agree and submit section', () => {
-        let section;
-
-        beforeEach(() => {
-            section = document.querySelector('body > form > #agree-and-submit');
-        });
-
-        describe('<input> type checkbox', () => {
-            let input;
-            let label;
+    describe('Pseudo-classes and Pseudo-elements', () => {
+        describe('direct first child <li> element inside <ol> element', () => {
+            let expectedStyle;
+            let selector;
 
             beforeEach(() => {
-                input = section.querySelector('input');
-                label = section.querySelector('label');
+                expectedStyle = {
+                    'border-bottom': '3px solid darkmagenta',
+                };
+
+                selector = cipher.decode(cipheredTestData['li-first-child-ol']);
             });
 
-            it('<label> should exist', () => {
-                expect(label).not.toBeNull();
-            });
+            it('should add selector', async () => {
+                await waitBrowserLoadEvent(document);
+                
+                const styleDeclaration = getStyleDeclarationForSelector(selector, document.styleSheets);
 
-            it('<input> should exist', () => {
-                expect(input).not.toBeNull();
-            });
-
-            it('<input> should be wrapped with label', () => {
-                expect(input.parentElement.tagName)
-                    .toBe('LABEL');
-            });
-
-            it('<input> should have correct name attribute', () => {
-                expect(input.name).toBe('user-agree');
-            });
-
-            it('<input> should have correct type attribute', () => {
-                expect(input.type).toBe('checkbox');
-            });
-
-            it('<label> should have correct text', () => {
-                expect(label.textContent.trim())
-                    .toBe('I agree on terms and conditions.');
+                expect(styleDeclaration)
+                    .toEqual(expect.objectContaining(expectedStyle));
             });
         });
 
-        describe('submit <button>', () => {
-            let button;
-            
+        describe('direct last child <li> element inside <ol> element', () => {
+            let expectedStyle;
+            let selector;
+
             beforeEach(() => {
-                button = section.querySelector('button');
+                expectedStyle = {
+                    'border-top': '3px solid darkturquoise',
+                };
+
+                selector = cipher.decode(cipheredTestData['li-last-child-ol']);
             });
 
-            it('should have correct type attribute', () => {
-                expect(button.type).toBe('submit');
+            it('should add selector', async () => {
+                await waitBrowserLoadEvent(document);
+                
+                const styleDeclaration = getStyleDeclarationForSelector(selector, document.styleSheets);
+
+                expect(styleDeclaration)
+                    .toEqual(expect.objectContaining(expectedStyle));
+            });
+        });
+
+        describe('<a> element inside the element with class name main-footer when user hovers over it', () => {
+            let expectedStyle;
+            let selector;
+
+            beforeEach(() => {
+                expectedStyle = {
+                    'color': 'yellowgreen',
+                };
+
+                selector = cipher.decode(cipheredTestData['a-main-footer']);
             });
 
-            it('should have correct text', () => {
-                expect(button.textContent.trim())
-                    .toBe('Send you data to NASA');
+            it('should add selector', async () => {
+                await waitBrowserLoadEvent(document);
+                
+                const styleDeclaration = getStyleDeclarationForSelector(selector, document.styleSheets);
+
+                expect(styleDeclaration)
+                    .toEqual(expect.objectContaining(expectedStyle));
+            });
+        });
+
+        describe('all focused <a> elements', () => {
+            let expectedStyle;
+            let selector;
+
+            beforeEach(() => {
+                expectedStyle = {
+                    'background-color': 'yellow',
+                };
+
+                selector = cipher.decode(cipheredTestData['a-focused']);
+            });
+
+            it('should add selector', async () => {
+                await waitBrowserLoadEvent(document);
+                
+                const styleDeclaration = getStyleDeclarationForSelector(selector, document.styleSheets);
+
+                expect(styleDeclaration)
+                    .toEqual(expect.objectContaining(expectedStyle));
+            });
+        });
+       
+        describe('<h2> "before" pseudo-element inside the element with class name tech', () => {
+            let expectedStyle;
+            let selector;
+
+            beforeEach(() => {
+                expectedStyle = {
+                    'content': '\'🤖\'',
+                };
+
+                selector = cipher.decode(cipheredTestData['h2-tech-before']);
+            });
+
+            it('should add selector', async () => {
+                await waitBrowserLoadEvent(document);
+                
+                const styleDeclaration = getStyleDeclarationForSelector(selector, document.styleSheets);
+
+                expect(styleDeclaration)
+                    .toEqual(expect.objectContaining(expectedStyle));
+            });
+        });
+
+        describe('<h2> "after" pseudo-element inside the element with class name tech', () => {
+            let expectedStyle;
+            let selector;
+
+            beforeEach(() => {
+                expectedStyle = {
+                    'content': '\'🚀\'',
+                };
+
+                selector = cipher.decode(cipheredTestData['h2-spaceflight-after']);
+            });
+
+            it('should add selector', async () => {
+                await waitBrowserLoadEvent(document);
+                
+                const styleDeclaration = getStyleDeclarationForSelector(selector, document.styleSheets);
+
+                expect(styleDeclaration)
+                    .toEqual(expect.objectContaining(expectedStyle));
             });
         });
     });
