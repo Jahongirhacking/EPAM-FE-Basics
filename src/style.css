@@ -1,15 +1,48 @@
-table {
-    border: 1px solid #000;
-    border-collapse: collapse;
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 16px;
+  padding: 15px;
+  max-width: 900px;
+  margin: 0 auto;
 }
 
-td, th {
-    border: 1px solid #000;
-    padding-right: 50px;
-    padding-left: 10PX;
-    text-align: left;
+h1 {
+  padding: 15px;
+  border: 5px solid dodgerblue;
+  border-radius: 3px;
 }
 
-tfoot td {
-    font-weight: bold;
+h2 {
+  color: #303030;
+  font-size: 1.5rem;
+}
+
+p {
+  font-size: 18px;
+}
+
+.quote {
+  color: darkslategrey;
+  font-style: italic;
+  font-weight: bold;
+}
+
+#main-image {
+  border: 5px solid slateblue;
+}
+
+ol {
+  list-style-type: upper-roman;
+}
+
+a {
+  color: dodgerblue;
+}
+
+a:visited {
+  color: violet;
+}
+
+a:hover {
+  color: mediumseagreen;
 }

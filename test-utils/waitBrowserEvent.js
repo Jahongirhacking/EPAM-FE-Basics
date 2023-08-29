@@ -10,4 +10,8 @@ async function waitBrowserEvent(eventName, addEventListener) {
     });
 }
 
-module.exports = { waitBrowserEvent };
+async function waitBrowserLoadEvent(document) {
+    return await waitBrowserEvent('load', document.addEventListener);
+}
+
+module.exports = { waitBrowserEvent, waitBrowserLoadEvent };
